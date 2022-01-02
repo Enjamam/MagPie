@@ -21,7 +21,7 @@ private:
     string password;
 
 public:
-    void put(string nam_put, string pass_put)
+    void pot(string nam_put, string pass_put)
     {
         name = nam_put;
         password = pass_put;
@@ -174,7 +174,7 @@ int read_manager_info()
     {
         file >> nam_man;
         file >> pass_man;
-        mangr[i].put(nam_man, pass_man);
+        mangr[i].pot(nam_man, pass_man);
         i++;
     }
     file.close();
@@ -260,7 +260,7 @@ void manager_reg()
     cin >> inp_pass;
     cout << endl;
 
-    total_man = read_manager_info();
+    total_man = read_manager_info()-1;
     ofstream on;
     on.open("Manager.txt");
 
