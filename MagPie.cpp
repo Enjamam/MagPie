@@ -2,7 +2,6 @@
 
 #include <bits/stdc++.h>
 #include <windows.h>
-//#include <graphics.h>
 #include <conio.h>
 #include <unistd.h>
 #include <iomanip>
@@ -372,7 +371,7 @@ int Menu()
 
         gotoxy(10,7);
         color(Set[4]);
-        cout<<"5. Skip";
+        cout<<"5. Skip" << endl;
 
         key = _getch();
 
@@ -409,31 +408,31 @@ int Menu()
             }
         }
 
-        Set[0] = 7;
-        Set[1] = 7;
-        Set[2] = 7;
-        Set[3] = 7;
-        Set[4] = 7;
+        Set[0] = 3;
+        Set[1] = 3;
+        Set[2] = 3;
+        Set[3] = 3;
+        Set[4] = 3;
 
         if(counter == 1)
         {
-            Set[0] = 12;
+            Set[0] = 14;
         }
         if(counter == 2)
         {
-            Set[1] = 12;
+            Set[1] = 14;
         }
         if(counter == 3)
         {
-            Set[2] = 12;
+            Set[2] = 14;
         }
         if(counter == 4)
         {
-            Set[3] = 12;
+            Set[3] = 14;
         }
         if(counter == 5)
         {
-            Set[4] = 12;
+            Set[4] = 14;
         }
 
     }
