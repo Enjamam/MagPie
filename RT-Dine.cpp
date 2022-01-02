@@ -1,8 +1,12 @@
-// C211108
-// Magpie Restaurant App
-// V5
+// Restaurant App
 
 #include <bits/stdc++.h>
+#include <windows.h>
+#include <conio.h>
+#include <unistd.h>
+#include <iomanip>
+#include <chrono>
+#include <thread>
 //#include <iostream>
 //#include <string>
 //#include <fstream>
@@ -17,7 +21,7 @@ private:
     string password;
 
 public:
-    void put(string nam_put, string pass_put)
+    void pot(string nam_put, string pass_put)
     {
         name = nam_put;
         password = pass_put;
@@ -59,10 +63,12 @@ public:
     void show()  // Show food details
     {
         cout << endl;
-        cout << "#" << serial << endl;
-        cout << "Name: " << name << endl;
-        cout << "Price: " << price << endl;
-        cout << "Amount: " << amount << endl;
+        cout << "   ===============================" << endl;
+        cout << "   |  " << "#" << serial << setw(15) << "|" << endl;
+        cout << "   |  " << "Name: " << name << setw(15) << "|" << endl;
+        cout << "   |  " << "Price: " << price << setw(15) << "|" << endl;
+        cout << "   |  " << "Amount: " << amount << setw(15) << "|" << endl;
+        cout << "   ===============================" << endl;
     }
 
     int show_item(int qntt)  // Order handle and do the work of customer order part
@@ -168,7 +174,7 @@ int read_manager_info()
     {
         file >> nam_man;
         file >> pass_man;
-        mangr[i].put(nam_man, pass_man);
+        mangr[i].pot(nam_man, pass_man);
         i++;
     }
     file.close();
@@ -225,9 +231,9 @@ int manager_login()
     {
         system("cls");
         cout << "Hola!!" << endl
-             << "Login succesfull!" << endl << endl
-             << "What do you want....?" << endl
-             << "---------------------" << endl;
+             << "Login succesfull!" << endl << endl;
+        sleep(1);
+        system("cls");
         return 2;
     }
     else if (cnt == 0)
@@ -254,7 +260,7 @@ void manager_reg()
     cin >> inp_pass;
     cout << endl;
 
-    total_man = read_manager_info();
+    total_man = read_manager_info()-1;
     ofstream on;
     on.open("Manager.txt");
 
@@ -302,30 +308,195 @@ int readallitems()
 }
 //End of Reading..........
 
-//Save data..................
-/*
-void save_menu(int counter)
+
+// Extra interactive feature
+
+void color(int color)
 {
-    int items, sr, pc, amt, nm;
-            ofstream save;
-            save.open("DB.txt");
-            int cnt = counter - 1;
-            int run = 0;
-
-            while (cnt--)
-            {
-                save << arr[run].get_ser(sr) << endl;
-                save << arr[run].get_name(nm) << endl;
-                save << arr[run].get_price(pc) << endl;
-                save << arr[run].get_amount(amt) << endl;
-                run++;
-            }
-            save.close();
-
-            return;
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
 }
-*/
-//End of saving.......
+
+void gotoxy(int x, int y)
+{
+    COORD c;
+    c.X=x;
+    c.Y=y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+
+int Menu()
+{
+    int Set[] = {7,7,7,7,7}; // DEFAULT COLORS
+    int counter = 3;
+    char key;
+
+    for(int i=0;;)
+    {
+        gotoxy(6,0);
+       // system("Color 0A");
+       color(2);
+        cout << "What do you want....?" << endl;
+        gotoxy(6,1);
+       // system("Color 0A");
+       color(2);
+        cout << "---------------------";
+
+        gotoxy(10,3);
+        color(Set[0]);
+        cout<<"1. Existing Menu";
+
+        gotoxy(10,4);
+        color(Set[1]);
+        cout<<"2. New Menu";
+
+        gotoxy(10,5);
+        color(Set[2]);
+        cout<<"3. Update Menu";
+
+        gotoxy(10,6);
+        color(Set[3]);
+        cout<<"4. Add Menu";
+
+        gotoxy(10,7);
+        color(Set[4]);
+        cout<<"5. Skip";
+
+        key = _getch();
+
+        if(key == 72 && (counter >=2 && counter <= 5))
+        {
+            counter--;
+        }
+        if(key == 80 && (counter >=1 && counter <= 4))
+        {
+            counter++;
+        }
+        if(key == '\r')//carriage return
+        {
+            if(counter == 1)
+            {
+                // if enter is click and highlight is on 1 the program will run the code here
+                return 1;
+            }
+            if(counter == 2)
+            {
+                return 2;
+            }
+            if(counter == 3)
+            {
+                return 3;
+            }
+            if(counter == 4)
+            {
+                return 4;
+            }
+            if(counter == 5)
+            {
+                return 5;
+            }
+        }
+
+        Set[0] = 7;
+        Set[1] = 7;
+        Set[2] = 7;
+        Set[3] = 7;
+        Set[4] = 7;
+
+        if(counter == 1)
+        {
+            Set[0] = 12;
+        }
+        if(counter == 2)
+        {
+            Set[1] = 12;
+        }
+        if(counter == 3)
+        {
+            Set[2] = 12;
+        }
+        if(counter == 4)
+        {
+            Set[3] = 12;
+        }
+        if(counter == 5)
+        {
+            Set[4] = 12;
+        }
+
+    }
+}
+
+//DSide function
+int DSide()
+{
+    int Set[] = {7,7,7}; // DEFAULT COLORS
+    int counter = 2;
+    char key;
+
+    for(int i=0;;)
+    {
+
+        gotoxy(10,2);
+        color(Set[0]);
+        cout << "1. Main Menu";
+
+        gotoxy(10,3);
+        color(Set[1]);
+        cout << "2. Back";
+
+        gotoxy(10,4);
+        color(Set[2]);
+        cout << "3. Exit" << endl;
+
+
+        key = _getch();
+
+        if(key == 72 && (counter >=2 && counter <= 3))
+        {
+            counter--;
+        }
+        if(key == 80 && (counter >=1 && counter <= 2))
+        {
+            counter++;
+        }
+        if(key == '\r')//carriage return
+        {
+            if(counter == 1)
+            {
+                // if enter is click and highlight is on 1 the program will run the code here
+                return 1;
+            }
+            if(counter == 2)
+            {
+                return 2;
+            }
+            if(counter == 3)
+            {
+                return 3;
+            }
+        }
+
+        Set[0] = 2;
+        Set[1] = 2;
+        Set[2] = 2;
+
+        if(counter == 1)
+        {
+            Set[0] = 14;
+        }
+        if(counter == 2)
+        {
+            Set[1] = 14;
+        }
+        if(counter == 3)
+        {
+            Set[2] = 14;
+        }
+
+    }
+}
+// End of Extra
+
 
 int main()
 {
@@ -342,6 +513,8 @@ int main()
 
     // Dialogue Part:
 Main:
+    system("cls");
+    color(14); // Changing the color of Print
     cout << endl << "Main Menu:" << endl;
     cout << "===============" << endl;
     cout << "1.Owner" << endl;
@@ -351,7 +524,10 @@ Main:
 
     if(user_select==1)
     {
+        system("cls");
         int log_reg;
+        cout << "Login or Registration:" << endl;
+        cout << "======================" << endl;
         cout << "\t" << "1.Login" << endl;
         cout << "\t" << "2.Registration" << endl;
         cout << "Your choice: ";
@@ -368,28 +544,37 @@ Main:
         }
         else   //If ID Pass match, then continue
 Owner:
-            cout << "\t" << "1.Existing Menu" << endl;
-        cout << "\t" << "2.New Menu" << endl;
-        cout << "\t" << "3.Update Menu" << endl;
-        cout << "\t" << "4.Add Menu" << endl;
-        cout << "\t" << "5.Skip" << endl;
+            // Menu();
+            /*    cout << "\t" << "1.Existing Menu" << endl;
+            cout << "\t" << "2.New Menu" << endl;
+            cout << "\t" << "3.Update Menu" << endl;
+            cout << "\t" << "4.Add Menu" << endl;
+            cout << "\t" << "5.Skip" << endl;
 
-        cout << "Select: ";
-        cin >> select_owner;
+            cout << "Select: ";
+            cin >> select_owner; */
+
+            select_owner = Menu();
         if(select_owner==1)
         {
+            system("cls");
             cout << endl << "Available Menu:" << endl;
             cout << "===============" << endl;
             for(int t=0; t<counter-1; t++)
             {
                 arr[t].show();
             }
+            cout << endl << "Press any key to Back: ";
+            getch();
+            system("cls");
 Decide:
             //Reading From File//
 //***************************//
             counter = readallitems();  //Counter will store total items counted from DB.txt
 //***************************//
-            cout << endl << "===================" << endl;
+            cout << "    Select an option:";
+            cout << endl << "    =================" << endl;
+            /*
             cout << "\t" << "1.Main Menu" << endl;
             cout << "\t" << "2.Back" << endl;
             cout << "\t" << "3.Exit" << endl;
@@ -397,16 +582,22 @@ Decide:
             cout << "Select: ";
             int decide;
             cin >> decide;
+            */
+            int decide;
+            decide = DSide(); //call and store data from Interactive Function
             if(decide==1)
             {
                 goto Main;
+                system("cls");
             }
             else if(decide==2)
             {
+                system("cls");
                 goto Owner;
             }
             else if(decide==3)
             {
+                // system(Color 0B);
                 cout << "Exiting..................................." << endl;
                 exit(0);
                 // goto Save;
@@ -575,6 +766,7 @@ Decide:
 
         if(select_owner==5)
         {
+            system("cls");
             goto Decide;
         }
     }
