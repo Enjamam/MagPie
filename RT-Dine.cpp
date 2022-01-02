@@ -267,8 +267,8 @@ void manager_reg()
     run = 0;  //To continue looping proccess
     while (total_man--) // reading numbers untill the end of file
     {
-        on << arr[run].get_nam(nam) << endl;
-        on << arr[run].get_pass(pass) << endl;
+        on << mangr[run].get_nam(nam) << endl;
+        on << mangr[run].get_pass(pass) << endl;
         run++;
     }
     on << inp_name << endl;
@@ -277,6 +277,7 @@ void manager_reg()
 
     cout << "Registration successfull.......!" << endl;
     cout << "Going to main menu........................................." << endl;
+    sleep(1.5);
     return;
 }
 //............................
@@ -333,12 +334,12 @@ int Menu()
     for(int i=0;;)
     {
         gotoxy(6,0);
-       // system("Color 0A");
-       color(2);
+        // system("Color 0A");
+        color(2);
         cout << "What do you want....?" << endl;
         gotoxy(6,1);
-       // system("Color 0A");
-       color(2);
+        // system("Color 0A");
+        color(2);
         cout << "---------------------";
 
         gotoxy(10,3);
