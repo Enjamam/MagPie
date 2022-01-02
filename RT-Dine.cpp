@@ -2,6 +2,7 @@
 
 #include <bits/stdc++.h>
 #include <windows.h>
+//#include <graphics.h>
 #include <conio.h>
 #include <unistd.h>
 #include <iomanip>
@@ -158,6 +159,23 @@ quantity_handle:
     ////////////////////////////////
 };
 
+// Color and Alignment functions
+
+void color(int color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
+}
+
+void gotoxy(int x, int y)
+{
+    COORD c;
+    c.X=x;
+    c.Y=y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+
+// End of Color and Alignment Function
+
 Magpie arr[150];  //Global Magpie array object
 Manager mangr[150]; //Global Magpie Manager array object
 
@@ -201,10 +219,16 @@ int manager_login()
     run = 0;  //To continue looping proccess
     cnt = 0;  //Flag to check
     x = read_manager_info() + 1;  // Available numbers of manager
-    cout << "Please input your user name: ";
+
+    system("cls");
+    color(11); // Changing the color of Print
+    cout << "             Log in Pannel:" << endl;
+    cout << "             ======================" << endl;
+    color(10); // Changing the color of Print
+    cout << endl << "               User name: ";
     cin >> name_inp;
     cout << endl;
-    cout << "Input your password: ";
+    cout << "               Password: ";
     cin >> pass_inp;
     cout << endl;
 
@@ -240,6 +264,7 @@ int manager_login()
     {
         cout << endl << "Login Unsuccessfull!" << endl
              << "Check your command again." << endl << endl;
+        sleep(2);
         // owner_id_pass();  //Check list empty or not also to manage listed user later
         return 1;
         // exit(0);
@@ -311,19 +336,6 @@ int readallitems()
 
 
 // Extra interactive feature
-
-void color(int color)
-{
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
-}
-
-void gotoxy(int x, int y)
-{
-    COORD c;
-    c.X=x;
-    c.Y=y;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
-}
 
 int Menu()
 {
@@ -436,16 +448,21 @@ int DSide()
 
     for(int i=0;;)
     {
+        color(4);
+        gotoxy(6,0);
+        cout << "Select an option:";
+        gotoxy(6,1);
+        cout << "=================";
 
-        gotoxy(10,2);
+        gotoxy(10,3);
         color(Set[0]);
         cout << "1. Main Menu";
 
-        gotoxy(10,3);
+        gotoxy(10,4);
         color(Set[1]);
         cout << "2. Back";
 
-        gotoxy(10,4);
+        gotoxy(10,5);
         color(Set[2]);
         cout << "3. Exit" << endl;
 
@@ -493,9 +510,141 @@ int DSide()
         {
             Set[2] = 14;
         }
+    }
+}
+
+// Main Menu interactive
+
+int MainManu()
+{
+    int Set[] = {2,2}; // DEFAULT COLORS
+    int counter = 2;
+    char key;
+
+
+    system("cls");
+    color(12); // Changing the color of Print
+    cout << "   Main Menu:" << endl;
+    cout << "   ===============" << endl;
+    cout << "           Select user type: " << endl;
+    cout << "           -------------------" << endl;
+
+
+    for(int i=0;;)
+    {
+        gotoxy(12,4);
+        color(Set[0]);
+        cout<<"1. Owner";
+
+        gotoxy(12,5);
+        color(Set[1]);
+        cout<<"2. Customer";
+
+
+
+        key = _getch();
+
+        if(key == 72 && (counter >=2 && counter <= 2))
+        {
+            counter--;
+        }
+        if(key == 80 && (counter >=1 && counter <= 1))
+        {
+            counter++;
+        }
+        if(key == '\r')//carriage return
+        {
+            if(counter == 1)
+            {
+                // if enter is click and highlight is on 1 the program will run the code here
+                return 1;
+            }
+            if(counter == 2)
+            {
+                return 2;
+            }
+        }
+
+        Set[0] = 2;
+        Set[1] = 2;
+
+        if(counter == 1)
+        {
+            Set[0] = 14;
+        }
+        if(counter == 2)
+        {
+            Set[1] = 14;
+        }
 
     }
 }
+
+// Login or Registration Menu Selection interactive
+
+int LogOrReg()
+{
+    int Set[] = {2,2}; // DEFAULT COLORS
+    int counter = 2;
+    char key;
+
+
+    system("cls");
+    color(12); // Changing the color of Print
+    cout << "            Log in or Registration:" << endl;
+    cout << "            ======================" << endl;
+
+
+    for(int i=0;;)
+    {
+        gotoxy(12,2.5);
+        color(Set[0]);
+        cout<<"1. Log in";
+
+        gotoxy(12,3.5);
+        color(Set[1]);
+        cout<<"2. Registration";
+
+
+
+        key = _getch();
+
+        if(key == 72 && (counter >=2 && counter <= 2))
+        {
+            counter--;
+        }
+        if(key == 80 && (counter >=1 && counter <= 1))
+        {
+            counter++;
+        }
+        if(key == '\r')//carriage return
+        {
+            if(counter == 1)
+            {
+                // if enter is click and highlight is on 1 the program will run the code here
+                return 1;
+            }
+            if(counter == 2)
+            {
+                return 2;
+            }
+        }
+
+        Set[0] = 2;
+        Set[1] = 2;
+
+        if(counter == 1)
+        {
+            Set[0] = 14;
+        }
+        if(counter == 2)
+        {
+            Set[1] = 14;
+        }
+
+    }
+}
+
 // End of Extra
 
 
@@ -513,26 +662,14 @@ int main()
 //***************************//
 
     // Dialogue Part:
-Main:
-    system("cls");
-    color(14); // Changing the color of Print
-    cout << endl << "Main Menu:" << endl;
-    cout << "===============" << endl;
-    cout << "1.Owner" << endl;
-    cout << "2.Customer" << endl;
-    cout << "I am: ";
-    cin >> user_select;  //Select either owner or customer
+Main:   // Main Menu starts from here
+
+    user_select = MainManu();  //User will Select either owner or customer via interactive system
 
     if(user_select==1)
     {
-        system("cls");
         int log_reg;
-        cout << "Login or Registration:" << endl;
-        cout << "======================" << endl;
-        cout << "\t" << "1.Login" << endl;
-        cout << "\t" << "2.Registration" << endl;
-        cout << "Your choice: ";
-        cin >> log_reg;
+        log_reg = LogOrReg();  //A value will return from LogOrReg interactive function further will decide
         if(log_reg == 2)
         {
             manager_reg();
@@ -544,18 +681,9 @@ Main:
             goto Main;
         }
         else   //If ID Pass match, then continue
-Owner:
-            // Menu();
-            /*    cout << "\t" << "1.Existing Menu" << endl;
-            cout << "\t" << "2.New Menu" << endl;
-            cout << "\t" << "3.Update Menu" << endl;
-            cout << "\t" << "4.Add Menu" << endl;
-            cout << "\t" << "5.Skip" << endl;
+Owner:  // Owner/Manager menu starts from here via interactive function
 
-            cout << "Select: ";
-            cin >> select_owner; */
-
-            select_owner = Menu();
+            select_owner = Menu(); //Users selection will return from function here
         if(select_owner==1)
         {
             system("cls");
@@ -573,17 +701,7 @@ Decide:
 //***************************//
             counter = readallitems();  //Counter will store total items counted from DB.txt
 //***************************//
-            cout << "    Select an option:";
-            cout << endl << "    =================" << endl;
-            /*
-            cout << "\t" << "1.Main Menu" << endl;
-            cout << "\t" << "2.Back" << endl;
-            cout << "\t" << "3.Exit" << endl;
 
-            cout << "Select: ";
-            int decide;
-            cin >> decide;
-            */
             int decide;
             decide = DSide(); //call and store data from Interactive Function
             if(decide==1)
