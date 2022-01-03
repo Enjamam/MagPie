@@ -42,6 +42,36 @@ public:
              << "  Password " << password << endl << endl;
     }
 };
+//////////////////////// Customer
+class Customer
+{
+private:
+    string CName;
+    string CPass;
+
+public:
+    void CPut(string nam_put, string pass_put) ///Put Customer Data when input
+    {
+        CName = nam_put;
+        CPass = pass_put;
+    }
+    string get_CName(string getnam)  ///Get Customer Data when needed
+    {
+        getnam = CName;
+        return getnam;
+    }
+    string get_CPass(string getpass)  ///Get Customer Data when needed
+    {
+        getpass = CPass;
+        return getpass;
+    }
+    void show_all_Customer(int mark)   /// Checking manager list while coding without opening the file
+    {
+        cout << mark << ".Name : " << CName << endl
+             << "  Password " << CPass << endl << endl;
+    }
+};
+/////////////////////
 
 class Magpie : public Manager
 {
@@ -66,7 +96,10 @@ public:
         cout << "   ===============================" << endl;
         cout << "   |  " << "#" << serial << setw(15) << "|" << endl;
         cout << "   |  " << "Name: " << name << setw(15) << "|" << endl;
-        cout << "   |  " << "Price: " << price << setw(15) << "|" << endl;
+        if(price==0)
+            cout << "   |  " << "Price: " << "Free" << setw(15) << "|" << endl;
+        else if(price!=0)
+            cout << "   |  " << "Price: " << price << setw(15) << "|" << endl;
         cout << "   |  " << "Amount: " << amount << setw(15) << "|" << endl;
         cout << "   ===============================" << endl;
     }
@@ -175,10 +208,11 @@ void gotoxy(int x, int y)
 
 // End of Color and Alignment Function
 
-Magpie arr[150];  //Global Magpie array object
-Manager mangr[150]; //Global Magpie Manager array object
+Magpie arr[1500];  ///Global Magpie array object
+Manager mangr[500]; ///Global Magpie Manager array object
+Customer custmr[500]; ///Global Magpie Customer array object
 
-//Manager Portion
+/// Read info Portion
 int read_manager_info()
 {
     int i = 0;
@@ -198,18 +232,51 @@ int read_manager_info()
     return i;
 }
 
-void owner_id_pass()   //Checking purpose, to check data available or not
+void owner_id_pass()   ///Checking purpose, to check data available or not
 {
     int f = 0;
     int x = read_manager_info() + 1;  // Available numbers of manager
 
-    while (x--)  // reading numbers untill the end of file
+    while (x--)  /// reading numbers untill the end of file
     {
         mangr[f].show_all_manager(f+1);
         f++;
     }
 }
 
+int read_customer_info()
+{
+    int i = 0;
+    string nam_custmr, pass_custmr;
+    // Manager custmr[150];
+    ifstream file;
+    file.open("Customer.txt");
+
+    while (file.eof() == 0)
+    {
+        file >> nam_custmr;
+        file >> pass_custmr;
+        custmr[i].CPut(nam_custmr, pass_custmr);
+        i++;
+    }
+    file.close();
+    return i;
+}
+
+void customer_id_pass()   ///Checking purpose, to check data available or not
+{
+    int f = 0;
+    int x = read_customer_info() + 1;  /// Available numbers of customer
+
+    while (x--)  /// reading numbers untill the end of file
+    {
+        custmr[f].show_all_Customer(f+1);
+        f++;
+    }
+}
+/// End of Read info portion
+
+/// Login Portion
 int manager_login()
 {
     int x, run, cnt;
@@ -271,16 +338,87 @@ int manager_login()
     return 0;
 }
 
+int customer_login()
+{
+    int x, run, cnt;
+    string name_inp, pass_inp, getnam, getpass, real_name, real_pass;
 
-void manager_reg()
+    run = 0;  /// To continue looping proccess
+    cnt = 0;  /// Flag to check
+    x = read_customer_info() + 1;  // Available numbers of manager
+
+    system("cls");
+    color(11); // Changing the color of Print
+    cout << "             Log in Pannel:" << endl;
+    cout << "             ======================" << endl;
+    color(10); // Changing the color of Print
+    cout << endl << "               User name: ";
+    cin >> name_inp;
+    cout << endl;
+    cout << "               Password: ";
+    cin >> pass_inp;
+    cout << endl;
+
+    while (x--) /// reading numbers untill the end of file
+    {
+        string real_name = custmr[run].get_CName(getnam);
+        string real_pass = custmr[run].get_CPass(getpass);
+        if (real_name == name_inp)
+        {
+            if (real_pass == pass_inp)
+            {
+                cnt = 1;
+                break;
+            }
+        }
+        else if (real_name != name_inp)
+        {
+            cnt = 0;
+        }
+        run++;
+    }
+
+    if (cnt == 1)
+    {
+        system("cls");
+        cout << "Hola!!" << endl
+             << "Login succesfull!" << endl << endl;
+        sleep(1);
+        system("cls");
+        return 2;
+    }
+    else if (cnt == 0)
+    {
+        cout << endl << "Login Unsuccessfull!" << endl
+             << "Check your command again." << endl << endl;
+        sleep(2);
+        // customer_id_pass();  //Check list empty or not also to manage listed user later
+        return 1;
+        // exit(0);
+    }
+    return 0;
+}
+/// End of login portion
+
+/// Registration portion
+
+void manager_reg()  /// Manager registration proccess function
 {
     int total_man, run;
     string inp_name, inp_pass, nam, pass;
 
-    cout << "\t" << "User name: ";
+    system("cls");  /// Clear Console
+    color(12); /// Changing the color of Print
+    cout << "              Registration Panel" << endl;
+    cout << "            ======================" << endl;
+    color(10); /// Changing the color of Print
+    cout << endl << "\t  " << "User name: ";
+    color(14); /// Changing the color of Print
     cin >> inp_name;
     cout << endl;
-    cout << "\t" << "Password: ";
+    color(10); /// Changing the color of Print
+    cout << "\t  " << "Password: ";
+    color(14); /// Changing the color of Print
     cin >> inp_pass;
     cout << endl;
 
@@ -288,8 +426,8 @@ void manager_reg()
     ofstream on;
     on.open("Manager.txt");
 
-    run = 0;  //To continue looping proccess
-    while (total_man--) // reading numbers untill the end of file
+    run = 0;  ///To continue looping proccess
+    while (total_man--) /// reading numbers untill the end of file
     {
         on << mangr[run].get_nam(nam) << endl;
         on << mangr[run].get_pass(pass) << endl;
@@ -304,17 +442,58 @@ void manager_reg()
     sleep(1.5);
     return;
 }
-//............................
+
+void customer_reg()  /// Customer registration proccess function
+{
+    int total_custmr, run;
+    string inp_name, inp_pass, nam, pass;
+
+    system("cls");  /// Clear Console
+    color(12); /// Changing the color of Print
+    cout << "              Registration Panel" << endl;
+    cout << "            ======================" << endl;
+    color(10); /// Changing the color of Print
+    cout << endl << "\t  " << "User name: ";
+    color(14); /// Changing the color of Print
+    cin >> inp_name;
+    cout << endl;
+    color(10); /// Changing the color of Print
+    cout << "\t  " << "Password: ";
+    color(14); /// Changing the color of Print
+    cin >> inp_pass;
+    cout << endl;
+
+    total_custmr = read_customer_info()-1;
+    ofstream on;
+    on.open("Customer.txt");
+
+    run = 0;  /// To continue looping proccess
+    while (total_custmr--) /// reading numbers untill the end of file
+    {
+        on << custmr[run].get_CName(nam) << endl;
+        on << custmr[run].get_CPass(pass) << endl;
+        run++;
+    }
+    on << inp_name << endl;
+    on << inp_pass << endl;
+    on.close();
+
+    cout << "Registration successfull.......!" << endl;
+    cout << "Going to main menu........................................." << endl;
+    sleep(1.5);
+    return;
+}
+/// End of Registration Portion
 
 
-//Read all items using this command........
+/// Read all items using this command........
 int readallitems()
 {
     // Magpie arr[150];
     int items, sr, pc, amt;
     string nm;
     ifstream in;
-    in.open("DB.txt");
+    in.open("Food Menu.txt");
     items=0;
     while (in.eof() == 0)
     {
@@ -331,10 +510,10 @@ int readallitems()
 
     return items;
 }
-//End of Reading..........
+///End of Reading..........
 
 
-// Extra interactive feature
+/// Extra interactive features
 
 int Menu()
 {
@@ -438,8 +617,7 @@ int Menu()
     }
 }
 
-//DSide function
-int DSide()
+int DSide()  /// DSide function
 {
     int Set[] = {7,7,7}; // DEFAULT COLORS
     int counter = 2;
@@ -512,9 +690,7 @@ int DSide()
     }
 }
 
-// Main Menu interactive
-
-int MainManu()
+int MainManu()  /// Main Menu interactive
 {
     int Set[] = {2,2}; // DEFAULT COLORS
     int counter = 2;
@@ -579,9 +755,7 @@ int MainManu()
     }
 }
 
-// Login or Registration Menu Selection interactive
-
-int LogOrReg()
+int LogOrReg() /// Login or Registration interactive function
 {
     int Set[] = {2,2}; // DEFAULT COLORS
     int counter = 2;
@@ -657,7 +831,7 @@ int main()
 
 //Reading From File//
 //***************************//
-    counter = readallitems();  //Counter will store total items counted from DB.txt
+    counter = readallitems();  //Counter will store total items counted from Food Menu.txt
 //***************************//
 
     // Dialogue Part:
@@ -698,7 +872,7 @@ Owner:  // Owner/Manager menu starts from here via interactive function
 Decide:
             //Reading From File//
 //***************************//
-            counter = readallitems();  //Counter will store total items counted from DB.txt
+            counter = readallitems();  //Counter will store total items counted from Food Menu.txt
 //***************************//
 
             int decide;
@@ -725,7 +899,7 @@ Decide:
         else if(select_owner==2)
         {
             ofstream out;
-            out.open("DB.txt");
+            out.open("Food Menu.txt");
             cout << "How Many Menu: " << endl;
             cin >> n;
             for(int i=0; i<n; i++)
@@ -749,7 +923,7 @@ Decide:
             out.close();
 
             ofstream save;
-            save.open("DB.txt");
+            save.open("Food Menu.txt");
             int cnt = counter - 1;
             int run = 0;
 
@@ -765,12 +939,13 @@ Decide:
             cout << endl << "\t\t\tMenu Added Successfully!" << endl;
             goto Decide;
         }
-        //////////////////////////////////////Update and Add item
+
+        /// Update and Add item
 
         else if (select_owner == 3)
         {
             ifstream in;
-            in.open("DB.txt");
+            in.open("Food Menu.txt");
             counter=0;
             while (in.eof() == 0)
             {
@@ -809,7 +984,7 @@ Decide:
 //Save data
 //save_menu(counter);
             ofstream save;
-            save.open("DB.txt");
+            save.open("Food Menu.txt");
             int cnt = counter - 1;
             int run = 0;
 
@@ -829,7 +1004,7 @@ Decide:
         else if (select_owner == 4)
         {
             ifstream in;
-            in.open("DB.txt");
+            in.open("Food Menu.txt");
             counter=0;
             while (in.eof() == 0)
             {
@@ -865,7 +1040,7 @@ Decide:
             }
 
             ofstream save;
-            save.open("DB.txt");
+            save.open("Food Menu.txt");
             int counter = l;
             int run = 0;
 
@@ -889,23 +1064,29 @@ Decide:
         }
     }
     //////////////////////////////////////////////////////////
-    if(user_select==2)  //When user is a customer
+    if(user_select==2)  ///When user is a customer
     {
-        //Work Body:
-        cout << endl
-             << "=======================" << endl;
-        cout << "★ Welcome to Magpie ★" << endl
-             << endl;
-        cout << "1. Show all" << endl;
-        cout << "2. Select" << endl;
-        cout << endl << "Select 1: ";
-select_1: //Level for jumping if wrong input
-        cin >> customer_show;
+        ///Work Body:
+UserLogin:
+        system("cls");
+        cout << "★ Welcome to Magpie ★" << endl;
+        /*  cout << "=======================" << endl;
+          cout << "1. Log in" << endl;
+          cout << "2. Registration" << endl;
+          cout << endl << "Select option: ";
+          cin >> customer_show;  */
 
+        customer_show = LogOrReg();  /// Customer will decide whether Sign in or Sign up
         if (customer_show == 1)
         {
-            // readall;
-            cout << endl << "Available Menu:" << endl;
+            int clogin = customer_login();  /// Login Check
+            if(clogin == 1)  /// If unseccessfull attempt try again
+            {
+                goto UserLogin;
+            }
+            else
+                /// readall menu;
+                cout << endl << "Available Menu:" << endl;
             cout << "===============" << endl;
             for(int t=0; t<counter-1; t++)
             {
@@ -939,7 +1120,7 @@ select_menu: //Level for jumping if wrong selection
                     {
 Save:
                         ofstream save;
-                        save.open("DB.txt");
+                        save.open("Food Menu.txt");
 
                         int run = 0;
                         int cnt = counter-1;
@@ -971,9 +1152,12 @@ Save:
                 cout << "<Please select an option>" << endl;
             goto Confirmation;
         }
-        else
-            cout << "<Please select 1 first>" << endl;
-        goto select_1;
+        else if(customer_show == 2)
+        {
+            customer_reg();
+            /// cout << "<Please select 1 first>" << endl;
+            goto Main;
+        }
     }
 ////////////////////////////////////////////////////////
 
