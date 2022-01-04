@@ -1,4 +1,5 @@
 // Restaurant App
+// MagPie
 
 #include <bits/stdc++.h>
 #include <windows.h>
