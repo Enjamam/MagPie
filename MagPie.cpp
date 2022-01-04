@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <chrono>
 #include <thread>
+#include <cwchar>
 //#include <iostream>
 //#include <string>
 //#include <fstream>
@@ -523,7 +524,7 @@ int readallitems()
 
 int Menu()
 {
-    int Set[] = {7,7,7,7,7}; /// DEFAULT COLORS
+    int Set[] = {7,7,7,7,7,7}; /// DEFAULT COLORS
     int counter = 3;
     char key;
 
@@ -556,15 +557,19 @@ int Menu()
 
         gotoxy(10,7);
         color(Set[4]);
-        cout<<"5. Skip" << endl;
+        cout<<"5. Delete Menu" << endl;
+
+        gotoxy(10,8);
+        color(Set[5]);
+        cout<<"6. Skip" << endl;
 
         key = _getch();
 
-        if(key == 72 && (counter >=2 && counter <= 5))
+        if(key == 72 && (counter >=2 && counter <= 6))
         {
             counter--;
         }
-        if(key == 80 && (counter >=1 && counter <= 4))
+        if(key == 80 && (counter >=1 && counter <= 5))
         {
             counter++;
         }
@@ -573,23 +578,33 @@ int Menu()
             if(counter == 1)
             {
                 // if enter is click and highlight is on 1 the program will run the code here
+                // cout << "Menu 1 Opened";
                 return 1;
             }
             if(counter == 2)
             {
+                // cout << "Menu 2 Opened";
                 return 2;
             }
             if(counter == 3)
             {
+                // cout << "Menu 3 Opened";
                 return 3;
             }
             if(counter == 4)
             {
+                // cout << "Menu 4 Opened";
                 return 4;
             }
             if(counter == 5)
             {
+                // cout << "Menu 5 Opened";
                 return 5;
+            }
+            if(counter == 6)
+            {
+                //  cout << "Menu 6 Opened";
+                return 6;
             }
         }
 
@@ -598,6 +613,7 @@ int Menu()
         Set[2] = 3;
         Set[3] = 3;
         Set[4] = 3;
+        Set[5] = 3;
 
         if(counter == 1)
         {
@@ -619,7 +635,10 @@ int Menu()
         {
             Set[4] = 14;
         }
-
+        if(counter == 6)
+        {
+            Set[5] = 14;
+        }
     }
 }
 
@@ -1011,7 +1030,9 @@ Decide:
                 run++;
             }
             save.close();
+            color(14);
             cout << endl << "\t\t\tUpdated Successfully." << endl;
+            sleep(2);
             system("cls");
             goto Decide;
         }
@@ -1058,15 +1079,78 @@ Decide:
                 run++;
             }
             save.close();
+            cout << endl << "\t\t\tAdded Successfully." << endl;
+            sleep(2);
             system("cls");
             goto Decide;
         }
         ///////////////////////////////// End of update and add item
 
-        if(select_owner==5)  /// Select skip to go back
+        if(select_owner==5)  /// Select delete to delete an item
         {
-            cout << endl << "\t\t\tItem added Successfully." << endl;
-            sleep(1.5);
+            system("cls");
+            counter = readallitems()-1;
+
+            cout << endl << "Available Menu:" << endl;  /// Will show available menu so that manager can decide which one to delete
+            cout << "===============" << endl;
+            for(int t=0; t<counter; t++)
+            {
+                arr[t].show();
+            }
+            ////////////////////////////////////////////////
+
+            cout << endl << "Which items you want to delete?" << endl;
+            int new_delete, l;
+            cout << "Enter the number: ";
+            cin >> new_delete;
+
+
+            ofstream save;
+            save.open("Food Menu.txt");
+            int run = 0;
+            int check =0;
+            while (counter--)
+            {
+                if(arr[run].get_ser(sr)==(new_delete))
+                {
+                    run++;
+                    check++;
+
+
+                }
+                else
+                {
+                    save << arr[run].get_ser(sr) << endl;
+                    save << arr[run].get_name(nm) << endl;
+                    save << arr[run].get_price(pc) << endl;
+                    save << arr[run].get_amount(amt) << endl;
+                    run++;
+
+                }
+                if(counter == 0)
+                {
+                    break;
+                }
+
+            }
+            save.close();
+            if(check == 0)
+            {
+                cout<<"\t\t\t\tNot available"<<endl;
+            }
+            else if(check>0)
+            {
+                cout<<"\t\t\t\tSuccessfully deleted"<<endl;
+            }
+            sleep(2);
+            system("cls");
+            goto Decide;
+        }
+
+        if(select_owner==6)  /// Select skip to go back
+        {
+            //   cout << endl << "\t\t\tItem added Successfully." << endl;
+            //   sleep(1.5);
             system("cls");
             goto Decide;
         }
@@ -1077,14 +1161,14 @@ Decide:
         ///Work Body:
 UserLogin:
         system("cls");
-        cout << "★ Welcome to Magpie ★" << endl;
-        cout << "=======================" << endl;
-        sleep(1.5);
-        /*
-        cout << "1. Log in" << endl;
-        cout << "2. Registration" << endl;
-        cout << endl << "Select option: ";
-        cin >> customer_show;  */
+        /* cout << "★ Welcome to Magpie ★" << endl;
+           cout << "=======================" << endl;
+           sleep(1.5);
+           /*
+           cout << "1. Log in" << endl;
+           cout << "2. Registration" << endl;
+           cout << endl << "Select option: ";
+           cin >> customer_show;  */
 
         customer_show = LogOrReg();  /// Customer will decide whether Sign in or Sign up
         if (customer_show == 1)
