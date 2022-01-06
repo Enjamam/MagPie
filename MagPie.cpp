@@ -242,6 +242,67 @@ public:
     ////////////////////////////////
 };
 
+class Order_history
+{
+private:
+    string Customer_Name;
+    int Total_Amount  ;
+    int Total_Point;
+
+public:
+    void CustomerPut(string name_put, int amount_put, int point_put) /// Put Customer Data when need
+    {
+        Customer_Name = name_put;
+        Total_Amount = amount_put;
+        Total_Point = point_put;
+    }
+    string get_CustomerName(string getnam) /// Get Customer Data when needed
+    {
+        getnam = Customer_Name;
+        return getnam;
+    }
+    int get_Total_Amount(int get_tamount) /// Get Customer Data when needed
+    {
+        get_tamount = Total_Amount;
+        return get_tamount;
+    }
+    void Update_Amount() /// Get Customer Data when needed
+    {
+        Total_Amount += total;
+    }
+    int get_Total_Point(int get_point) /// Get Customer Data when needed          Test
+    {
+        get_point = Total_Point;
+        return get_point;
+    }
+    void Update_Point() /// Get Customer Data when needed
+    {
+        Total_Point = 0;
+        Total_Point += (total/10);
+    }
+    void showhistory()
+    {
+        cout << "  Total Spend :    " << Total_Amount << endl
+                 << "  Available Point: " << Total_Point << endl
+                 << endl;
+    }
+
+    int History() /// Checking manager list while coding without opening the file
+    {
+        int flag = 0;
+        if (Customer_Name == MCN)
+        {
+            // color(14);
+            system("COLOR 0F");
+            cout << "  Total Spend :    " << Total_Amount << endl
+                 << "  Available Point: " << Total_Point << endl
+                 << endl;
+            flag = 1;
+            return 1;
+        }
+    }
+};
+
 /// Color, Design and Alignment functions
 
 void color(int color)
@@ -289,6 +350,29 @@ void Exit() /// When user select exit it will be more attractive to see
 Magpie arr[1500];     /// Global Magpie array object
 Manager mangr[500];   /// Global Magpie Manager array object
 Customer custmr[500]; /// Global Magpie Customer array object
+Order_history history[500]; /// Global Magpie Customer_history array object
+
+///Read History
+int read_history() // Reading Customer detailes from file
+{
+    int i = 0;
+    string UName;
+    int UAmount,UPoint;
+    // Manager custmr[150];
+    ifstream file;
+    file.open("orderhistory.txt");
+
+    while (file.eof() == 0)
+    {
+        file >> UName;
+        file >> UAmount;
+        file >> UPoint;
+        history[i].CustomerPut(UName,UAmount,UPoint);
+        i++;
+    }
+    file.close();
+    return i;
+}
 
 /// Read info Portion
 int read_manager_info() // Reading Manager detailes from file
@@ -357,6 +441,7 @@ void customer_id_pass() /// Checking purpose, to check data available or not
     }
 }
 /// End of Read info portion
+
 
 /// Login Portion
 int manager_login() /// Login function for Manager
@@ -598,6 +683,26 @@ void customer_reg() /// Customer registration proccess function
     on << inp_mob << endl;
     on << inp_adrs << endl;
     on.close();
+
+    string name;
+    int amount;
+    int point;
+    int kl = read_history()-1;
+    ofstream p;
+    p.open("orderhistory.txt");
+    int op=0;
+    while(kl--)
+    {
+        p << history[op].get_CustomerName(name) <<endl;
+        p << history[op].get_Total_Amount(amount)<<endl;
+        p << history[op].get_Total_Point(point) <<endl;
+        op++;
+    }
+    p << inp_name <<endl;
+    p << 0 <<endl;
+    p << 0 <<endl;
+    p.close();
+
 
     cout << "Registration successfull.......!" << endl;
     cout << "Going back to main menu........................................." << endl;
@@ -1494,6 +1599,18 @@ Main: /// Main Menu starts from here
                 cout << "================" << endl;
                 customer_id_pass(); //......................................................................
                 color(6);
+                int l = read_history()-1;
+                    int y =0;
+                    string kl;
+                while(l--)
+                      {
+                          if(MCN == history[y].get_CustomerName(kl))
+                      {
+                          history[y].showhistory();
+                          break;
+                      }
+                          y++;
+                      }
                 cout << endl
                      << endl
                      << "Press any key to back: ";
@@ -1593,6 +1710,34 @@ Main: /// Main Menu starts from here
                         }
                         save.close();
                         cout << "\n\n\t\t\t\tMenu Saved Before Exiting Successfully!\n";
+                        int hj = read_history()-1;
+                        int gh = 0;
+                        string name;
+                        int point,amount;
+                        ofstream ve;
+                        ve.open("orderhistory.txt");
+
+                        while (hj--)
+                        {
+                            if(MCN == history[gh].get_CustomerName(name))
+                            {
+                             ve << history[gh].get_CustomerName(name) <<endl;
+                             ve << history[gh].get_Total_Amount(amount) + total<<endl;
+                             ve << (total / 10)<<endl;
+                             gh++;
+                            }
+                            else
+                            {
+                                 ve << history[gh].get_CustomerName(name) <<endl;
+                                 ve << history[gh].get_Total_Amount(amount)<<endl;
+                                 ve << history[gh].get_Total_Point(point)<<endl;
+                                gh++;
+
+                            }
+
+                        }
+                        ve.close();
+
                         exit(0);
                     }
                 }
