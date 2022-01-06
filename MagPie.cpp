@@ -1,4 +1,5 @@
 // Restaurant App
+// 06/01/2022
 
 #include <bits/stdc++.h>
 #include <windows.h>
@@ -83,16 +84,17 @@ public:
         getadrs = CAddress;
         return getadrs;
     }
-    int show_all_Customer() /// Checking manager list while coding without opening the file
+    int CustomerProfile() /// Checking manager list while coding without opening the file
     {
         int flag = 0;
         if (CName == MCN)
         {
-            system("COLOR 2F");
-            cout << "Name :    " << CName << endl
-                 << "Password: " << CPass << endl
-                 << "Mobile:   " << CMobile << endl
-                 << "Address:  " << CAddress << endl
+            // color(14);
+            system("COLOR 0F");
+            cout << "  Name :    " << CName << endl
+                 << "  Password: " << CPass << endl
+                 << "  Mobile:   " << CMobile << endl
+                 << "  Address:  " << CAddress << endl
                  << endl;
             flag = 1;
             return 1;
@@ -240,7 +242,7 @@ public:
     ////////////////////////////////
 };
 
-/// Color and Alignment functions
+/// Color, Design and Alignment functions
 
 void color(int color)
 {
@@ -255,7 +257,34 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-/// End of Color and Alignment Function
+void splash() /// Splash screen when need to show
+{
+    string MagPie = "Welcome to MagPie";
+
+    // system("color 7A");
+    system("cls");
+    color(14);
+    for (int i = 0; i < MagPie.size(); i++)
+    {
+        cout << MagPie[i];
+        Sleep(80);
+    }
+    sleep(1.5);
+}
+
+void Exit() /// When user select exit it will be more attractive to see
+{
+    int i;
+    string ExitMsg = "Exiting..............................";
+    for (i = 0; i <= ExitMsg.size(); i++)
+    {
+        cout << ExitMsg[i];
+        Sleep(40);
+    }
+    exit(0);
+}
+
+/// End of Color, Design and Alignment Function
 
 Magpie arr[1500];     /// Global Magpie array object
 Manager mangr[500];   /// Global Magpie Manager array object
@@ -321,9 +350,9 @@ void customer_id_pass() /// Checking purpose, to check data available or not
 
     while (x--) /// reading numbers untill the end of file
     {
-        int flagRcv = custmr[f].show_all_Customer();
+        int flagRcv = custmr[f].CustomerProfile();
         f++;
-        if (flagRcv == 1)
+        if (flagRcv == 1) /// Will check shown or not. If shown, it will terminate the proccess
             break;
     }
 }
@@ -644,7 +673,7 @@ int Menu() /// Menu for owner to give command as admin
 
         gotoxy(10, 8);
         color(Set[5]);
-        cout << "6. Back" << endl;
+        cout << "6. Skip" << endl;
 
         key = _getch();
 
@@ -799,7 +828,8 @@ int DSide() /// DSide function
 
 int MainManu() /// Main Menu interactive
 {
-    int Set[] = {2, 2}; /// DEFAULT COLORS
+MainMenu:
+    int Set[] = {2, 2, 2, 2}; /// DEFAULT COLORS
     int counter = 2;
     char key;
 
@@ -814,19 +844,27 @@ int MainManu() /// Main Menu interactive
     {
         gotoxy(12, 4);
         color(Set[0]);
-        cout << "1. Owner";
+        cout << "1. Manager";
 
         gotoxy(12, 5);
         color(Set[1]);
         cout << "2. Customer" << endl;
 
+        gotoxy(12, 6);
+        color(Set[2]);
+        cout << "3. Developer Info" << endl;
+
+        gotoxy(12, 7);
+        color(Set[3]);
+        cout << "4. Exit" << endl;
+
         key = _getch();
 
-        if (key == 72 && (counter >= 2 && counter <= 2))
+        if (key == 72 && (counter >= 2 && counter <= 4))
         {
             counter--;
         }
-        if (key == 80 && (counter >= 1 && counter <= 1))
+        if (key == 80 && (counter >= 1 && counter <= 3))
         {
             counter++;
         }
@@ -841,10 +879,49 @@ int MainManu() /// Main Menu interactive
             {
                 return 2;
             }
+            if (counter == 3)
+            {
+                system("cls");
+                color(12);
+                cout << "   Developers Info" << endl;
+                cout << "  =================" << endl
+                     << endl;
+                color(2);
+                string Team = " Team RunTime Terror";
+                for (int i = 0; i <= Team.size(); i++)
+                {
+                    cout << Team[i];
+                    Sleep(50);
+                }
+                // cout << " Team RunTime Terror" << endl;
+                cout << endl
+                     << "----------------------" << endl;
+                color(14);
+                Sleep(150);
+                cout << "  1. Emrus" << endl;
+                Sleep(180);
+                cout << "  2. Istiak" << endl;
+                Sleep(180);
+                cout << "  3. Minhaz" << endl;
+
+                cout << endl
+                     << endl
+                     << "Press any key to back: ";
+                getch();
+                goto MainMenu;
+                // return 3;
+            }
+            if (counter == 4)
+            {
+                Exit();
+                //  return 4;
+            }
         }
 
         Set[0] = 2;
         Set[1] = 2;
+        Set[2] = 2;
+        Set[3] = 2;
 
         if (counter == 1)
         {
@@ -853,6 +930,14 @@ int MainManu() /// Main Menu interactive
         if (counter == 2)
         {
             Set[1] = 14;
+        }
+        if (counter == 3)
+        {
+            Set[2] = 14;
+        }
+        if (counter == 4)
+        {
+            Set[3] = 14;
         }
     }
 }
@@ -1047,21 +1132,6 @@ int CustomerMenu() /// Customer menu function, will be visible after login
 
 /// End of Extra
 
-void splash() /// Splash screen when need to show
-{
-    string MagPie = "Welcome to MagPie";
-
-    // system("color 7A");
-    system("cls");
-    color(14);
-    for (int i = 0; i < MagPie.size(); i++)
-    {
-        cout << MagPie[i];
-        Sleep(80);
-    }
-    sleep(1.5);
-}
-
 int main() /// Main Function starts from here.......
 {
     // Magpie arr[150];
@@ -1102,6 +1172,7 @@ Main: /// Main Menu starts from here
         if (select_owner == 1)
         {
             system("cls");
+            color(9);
             cout << endl
                  << "Available Menu:" << endl; /// Willl shhow available food menu
             cout << "===============" << endl;
@@ -1418,13 +1489,14 @@ Main: /// Main Menu starts from here
             if (CustmrCmd == 1) /// If customer decided to show his profile
             {
                 system("cls");
+                color(2);
                 cout << "  Your Profile" << endl;
                 cout << "================" << endl;
                 customer_id_pass(); //......................................................................
                 color(6);
                 cout << endl
                      << endl
-                     << "Press any key to back" << endl;
+                     << "Press any key to back: ";
                 getch();
                 system("cls");
                 goto CMenu;
@@ -1454,6 +1526,7 @@ Main: /// Main Menu starts from here
                 }
                 /////////////////////////////////////
             Confirmation:
+                color(6);
                 // confirmation = YesNo();
                 cout << endl
                      << "Want something....?\n";
