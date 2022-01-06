@@ -1,6 +1,11 @@
 // Restaurant App
 // 06/01/2022
 
+/// Task
+// 1. Owner can add manager
+// 2. Manager can ban customer
+// 3.
+
 #include <bits/stdc++.h>
 #include <windows.h>
 #include <conio.h>
@@ -9,13 +14,19 @@
 #include <chrono>
 #include <thread>
 #include <cwchar>
-//#include <iostream>
-//#include <string>
-//#include <fstream>
+#include <iostream>
+#include <string>
+#include <fstream>
+
 using namespace std;
 
-int total = 0; /// Store bill of a session
-string MCN;    /// Store username of a session
+int total = 0;     /// Store bill of a session
+int CPoint = 0;    /// Store point earned by customer purchasing items.
+int FCnt = 0;      /// Store customer point when login
+int FPrice[50];    /// Store total amount price of a session
+int FAmount[50];   /// Store total amount of purchase of a session
+string MCN;        /// Store username of a session
+string FItems[50]; /// Store total amount of purchased items of a session
 
 class Manager
 {
@@ -91,10 +102,10 @@ public:
         {
             // color(14);
             system("COLOR 0F");
-            cout << "  Name :    " << CName << endl
-                 << "  Password: " << CPass << endl
-                 << "  Mobile:   " << CMobile << endl
-                 << "  Address:  " << CAddress << endl
+            cout << "  Name     : " << CName << endl
+                 << "  Password : " << CPass << endl
+                 << "  Mobile   : " << CMobile << endl
+                 << "  Address  : " << CAddress << endl
                  << endl;
             flag = 1;
             return 1;
@@ -188,10 +199,14 @@ public:
         cout << "#" << serial << endl;
         cout << "\t\t"
              << "   Name: " << name << endl;
+        FItems[FCnt] = name; /// Store ordered items name
         cout << "\t\t"
              << "   Quantity: " << qntt << endl;
+        FAmount[FCnt] = qntt; /// Store ordered items amount
         cout << "\t\t"
              << "   Bill: " << price * qntt << " Taka" << endl;
+        FPrice[FCnt] = price; /// Store ordered items amount
+        FCnt++;               /// After each order counter will increase
         total += price * qntt;
 
         cout << endl
@@ -207,14 +222,7 @@ public:
         }
         else
         {
-            cout << endl
-                 << " \t\t\t\t\t Billing Menu" << endl;
-            cout << "\t\t\t\t\t==============" << endl;
-            cout << endl
-                 << "\t\t\t\tYour total bill is: " << total << " Taka" << endl;
-            cout << endl
-                 << "Thank You, Sir. "
-                 << "\t\t\t\t\t\t\t\tHave a good day.\n";
+            /// Return and generate digital bill from another function
             return 2;
         }
     }
@@ -246,7 +254,7 @@ class Order_history
 {
 private:
     string Customer_Name;
-    int Total_Amount  ;
+    int Total_Amount;
     int Total_Point;
 
 public:
@@ -266,34 +274,38 @@ public:
         get_tamount = Total_Amount;
         return get_tamount;
     }
-    void Update_Amount() /// Get Customer Data when needed
+    void Update_Amount() /// Update Customer Data when needed
     {
         Total_Amount += total;
     }
-    int get_Total_Point(int get_point) /// Get Customer Data when needed          Test
+    int get_Total_Point(int get_point) /// Get Customer Data when needed
     {
         get_point = Total_Point;
         return get_point;
     }
-    void Update_Point() /// Get Customer Data when needed
+    void Update_Point() /// Update Customer Data when needed
     {
         Total_Point = 0;
-        Total_Point += (total/10);
-    }
-    void showhistory()
-    {
-        cout << "  Total Spend :    " << Total_Amount << endl
-                 << "  Available Point: " << Total_Point << endl
-                 << endl;
+        Total_Point += (total / 10);
     }
 
-    int History() /// Checking manager list while coding without opening the file
+    void showhistory()
+    {
+        cout << "  Total Spend     : " << Total_Amount << endl
+             << "  Available Point : " << Total_Point << endl
+             << endl;
+        cout << "  Note: Point coversion rate: 1 Point per 10 TK." << endl
+             << "  It will reset after every order." << endl
+             << "  You can use point for previous order in next order." << endl;
+    }
+
+    int History() /// Showing customer history with function
     {
         int flag = 0;
         if (Customer_Name == MCN)
         {
             // color(14);
-            system("COLOR 0F");
+            // system("COLOR 0F");
             cout << "  Total Spend :    " << Total_Amount << endl
                  << "  Available Point: " << Total_Point << endl
                  << endl;
@@ -303,8 +315,12 @@ public:
     }
 };
 
-/// Color, Design and Alignment functions
+Magpie arr[1500];           /// Global Magpie array object
+Manager mangr[100];         /// Global Magpie Manager array object
+Customer custmr[500];       /// Global Magpie Customer array object
+Order_history history[500]; /// Global Magpie Customer_history array object
 
+/// Color, Design and Alignment functions
 void color(int color)
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
@@ -337,41 +353,108 @@ void Exit() /// When user select exit it will be more attractive to see
 {
     int i;
     string ExitMsg = "Exiting..............................";
+
+    cout << endl
+         << endl
+         << endl;
     for (i = 0; i <= ExitMsg.size(); i++)
     {
         cout << ExitMsg[i];
-        Sleep(40);
+        Sleep(30);
     }
     exit(0);
 }
 
+void ShowBill()
+{
+    int TotalItems;
+    string FoodName;
+
+    system("cls");
+
+    int discount = total - CPoint;
+    double vat = discount * 6 / 100.00;
+    string date = "06 Jan 2022";
+    // cout << "Enter Date: Format (05 Jan 2022)" << endl;
+    // getline(cin, date);
+    // cout << fixed << setprecision(2) << vat << endl;
+
+    cout << endl;
+    cout << "\t\t MagPie Restaurant" << endl;
+    cout << "\t\t-------------------" << endl
+         << endl;
+    cout << "Date: " << date << endl;
+    cout << "Invoice To: Mr. " << MCN << endl;
+    cout << "----------------------------------------------------" << endl;
+    cout << "Items                  Qty                  Total" << endl;
+    cout << "----------------------------------------------------" << endl
+         << endl;
+    for (int i = 0; i < FCnt; i++)
+    {
+        int itemsize = FItems[i].size();
+        int needspace = 25 - itemsize;
+        cout << FItems[i] << setw(needspace) << FAmount[i] << "                    "
+             << FAmount[i] * FPrice[i] << ".00" << endl;
+        itemsize = 0;
+    }
+    //  cout << "Burhani                5                     500.00" << endl << endl;
+
+    cout << "----------------------------------------------------" << endl;
+    cout << "Sub Total                                    " << total << ".00" << endl;
+    cout << "Discount @Point                              " << CPoint << ".00" << endl;
+    cout << "                                             -------" << endl;
+    cout << "Net Total                                    " << discount << ".00" << endl;
+    cout << "VAT @6%                                      " << vat << endl;
+    cout << "----------------------------------------------------" << endl;
+    cout << "Grand Total                                  " << discount + vat << endl;
+    cout << "----------------------------------------------------" << endl
+         << endl
+         << endl
+         << endl
+         << endl;
+
+    return;
+}
 /// End of Color, Design and Alignment Function
 
-Magpie arr[1500];     /// Global Magpie array object
-Manager mangr[500];   /// Global Magpie Manager array object
-Customer custmr[500]; /// Global Magpie Customer array object
-Order_history history[500]; /// Global Magpie Customer_history array object
-
-///Read History
+/// Read History
 int read_history() // Reading Customer detailes from file
 {
     int i = 0;
     string UName;
-    int UAmount,UPoint;
+    int UAmount, UPoint;
     // Manager custmr[150];
     ifstream file;
-    file.open("orderhistory.txt");
+    file.open("Order History.txt");
 
     while (file.eof() == 0)
     {
         file >> UName;
         file >> UAmount;
         file >> UPoint;
-        history[i].CustomerPut(UName,UAmount,UPoint);
+        history[i].CustomerPut(UName, UAmount, UPoint);
         i++;
     }
     file.close();
     return i;
+}
+
+int Get_Cpoint() /// Getting Point from user profile to use later
+{
+    int j = read_history() - 1;
+    int k = 0;
+    int point, g;
+    string name;
+    while (j--)
+    {
+        if (MCN == history[k].get_CustomerName(name))
+        {
+            g = history[k].get_Total_Point(point);
+            break;
+        }
+        k++;
+    }
+    return g;
 }
 
 /// Read info Portion
@@ -442,7 +525,6 @@ void customer_id_pass() /// Checking purpose, to check data available or not
 }
 /// End of Read info portion
 
-
 /// Login Portion
 int manager_login() /// Login function for Manager
 {
@@ -459,13 +541,13 @@ int manager_login() /// Login function for Manager
     cout << "             ======================" << endl;
     color(10); /// Changing the color of Print
     cout << endl
-         << "               User name: ";
+         << "               User name : ";
     color(14); /// Changing the color of Print
     cin >> name_inp;
     MCN = name_inp; // Taking name to use in profile show function
     color(10);      /// Changing the color of Print
     cout << endl
-         << "               Password: ";
+         << "               Password  : ";
     color(14); /// Changing the color of Print
     cin >> pass_inp;
     cout << endl;
@@ -491,8 +573,9 @@ int manager_login() /// Login function for Manager
 
     if (cnt == 1)
     {
-        system("cls");
-        cout << "Hola!!" << endl
+        cout << endl
+             << endl
+             << "Hola!!" << endl
              << "Login succesfull!" << endl
              << endl;
         sleep(1);
@@ -528,13 +611,13 @@ int customer_login() /// Login function for customer
     cout << "             ======================" << endl;
     color(10); /// Changing the color of Print
     cout << endl
-         << "               User name: ";
+         << "               User name : ";
     color(14); /// Changing the color of Print
     cin >> name_inp;
     MCN = name_inp; // Taking name to use in profile show function
     color(10);      /// Changing the color of Print
     cout << endl
-         << "               Password: ";
+         << "               Password  : ";
     color(14); /// Changing the color of Print
     cin >> pass_inp;
     cout << endl;
@@ -560,8 +643,9 @@ int customer_login() /// Login function for customer
 
     if (cnt == 1)
     {
-        system("cls");
-        cout << "Hola!!" << endl
+        cout << endl
+             << endl
+             << "Hola!!" << endl
              << "Login succesfull!" << endl
              << endl;
         sleep(1);
@@ -583,6 +667,26 @@ int customer_login() /// Login function for customer
 }
 /// End of login portion
 
+int UserNameCheck(string uname) /// Will check username previously available or not
+{
+    int l = read_history() - 1; /// Calling read_history to get total data number
+    int y = 0;
+    int flag = 0;
+    string kl; /// kl will hold customer name from class
+    while (l--)
+    {
+        if (uname == history[y].get_CustomerName(kl)) /// MCN is Cusomer user name stored globally
+        {
+            flag = 1; /// If name matched, show Spend and Point available
+            break;
+        }
+        y++;
+    }
+    if (flag == 1)
+        return 1;
+    else
+        return 2;
+}
 /// Registration portion
 
 void manager_reg() /// Manager registration proccess function
@@ -631,6 +735,7 @@ void manager_reg() /// Manager registration proccess function
 
 void customer_reg() /// Customer registration proccess function
 {
+AnotherName:
     int total_custmr, run;
     string inp_name, inp_pass, inp_mob, inp_adrs, nam, pass, mob, adrs;
 
@@ -644,7 +749,23 @@ void customer_reg() /// Customer registration proccess function
          << "User name: ";
     color(14); /// Changing the color of Print
     cin >> inp_name;
-    cout << endl;
+    int ExistORNot = UserNameCheck(inp_name); /// Return 1 indicates user name available already
+    if (ExistORNot == 1)
+    {
+        color(12);
+        cout << endl
+             << endl
+             << endl
+             << endl
+             << "      User Name already exist!" << endl
+             << "      Please choice another User Name." << endl
+             << endl;
+        color(7);
+        system("pause");
+        goto AnotherName; /// Another login name because of existance
+    }
+    else
+        cout << endl;
     color(10); /// Changing the color of Print
     cout << "\t  "
          << "Password: ";
@@ -661,8 +782,9 @@ void customer_reg() /// Customer registration proccess function
     cout << "\t  "
          << "Address: ";
     color(14); /// Changing the color of Print
-    cin >> inp_adrs;
-    // getline(cin, inp_adrs);
+    // cin >> inp_adrs;
+    cin.ignore();
+    getline(cin, inp_adrs);
     cout << endl;
 
     total_custmr = read_customer_info() - 1;
@@ -687,22 +809,21 @@ void customer_reg() /// Customer registration proccess function
     string name;
     int amount;
     int point;
-    int kl = read_history()-1;
+    int kl = read_history() - 1;
     ofstream p;
-    p.open("orderhistory.txt");
-    int op=0;
-    while(kl--)
+    p.open("Order History.txt");
+    int op = 0;
+    while (kl--)
     {
-        p << history[op].get_CustomerName(name) <<endl;
-        p << history[op].get_Total_Amount(amount)<<endl;
-        p << history[op].get_Total_Point(point) <<endl;
+        p << history[op].get_CustomerName(name) << endl;
+        p << history[op].get_Total_Amount(amount) << endl;
+        p << history[op].get_Total_Point(point) << endl;
         op++;
     }
-    p << inp_name <<endl;
-    p << 0 <<endl;
-    p << 0 <<endl;
+    p << inp_name << endl;
+    p << 0 << endl;
+    p << 0 << endl;
     p.close();
-
 
     cout << "Registration successfull.......!" << endl;
     cout << "Going back to main menu........................................." << endl;
@@ -738,7 +859,6 @@ int readallitems()
 /// End of Reading..........
 
 /// Extra interactive features
-
 int Menu() /// Menu for owner to give command as admin
 {
     int Set[] = {3, 3, 3, 3, 3, 3}; /// DEFAULT COLORS
@@ -1010,9 +1130,8 @@ MainMenu:
                 cout << "  3. Minhaz" << endl;
 
                 cout << endl
-                     << endl
-                     << "Press any key to back: ";
-                getch();
+                     << endl;
+                system("pause");
                 goto MainMenu;
                 // return 3;
             }
@@ -1246,6 +1365,7 @@ int main() /// Main Function starts from here.......
     string nm;
 
     splash();
+
     // Reading From File//
     //***************************//
     counter = readallitems(); /// Counter will store total items counted from Food Menu.txt
@@ -1285,9 +1405,8 @@ Main: /// Main Menu starts from here
             {
                 arr[t].show();
             }
-            cout << endl
-                 << "Press any key to Back:";
-            getch();
+            cout << endl;
+            system("pause");
             system("cls");
             goto Owner;
 
@@ -1312,10 +1431,10 @@ Main: /// Main Menu starts from here
             else if (decide == 3) /// Exit from program
             {
                 // system(Color 0B);
-                color(8); /// Changing the color of Print
-                cout << "Exiting..................................." << endl;
-                color(7);
-                exit(0);
+                // color(8); /// Changing the color of Print
+                // cout << "Exiting..................................." << endl;
+                // color(7);
+                Exit();
                 // goto Save;
             }
         }
@@ -1595,28 +1714,31 @@ Main: /// Main Menu starts from here
             {
                 system("cls");
                 color(2);
-                cout << "  Your Profile" << endl;
-                cout << "================" << endl;
-                customer_id_pass(); //......................................................................
+                cout << "    Your Profile" << endl;
+                cout << "  ================" << endl;
+                // CPoint = Get_Cpoint();
+                customer_id_pass(); // Customer profile show using this function
                 color(6);
-                int l = read_history()-1;
-                    int y =0;
-                    string kl;
-                while(l--)
-                      {
-                          if(MCN == history[y].get_CustomerName(kl))
-                      {
-                          history[y].showhistory();
-                          break;
-                      }
-                          y++;
-                      }
+                int l = read_history() - 1; /// Calling read_history to get total data number
+                int y = 0;
+                string kl; /// kl will hold customer name from class
+                while (l--)
+                {
+                    if (MCN == history[y].get_CustomerName(kl)) /// MCN is Cusomer user name stored globally
+                    {
+                        history[y].showhistory(); /// If name matched, show Spend and Point available
+                        break;
+                    }
+                    y++;
+                }
+
+                color(7);
+                // system("COLOR 0F");
                 cout << endl
-                     << endl
-                     << "Press any key to back: ";
-                getch();
+                     << endl;
+                system("pause");
                 system("cls");
-                goto CMenu;
+                goto CMenu; /// Going to customer menu (back)
             }
 
             else if (CustmrCmd == 3)
@@ -1709,36 +1831,47 @@ Main: /// Main Menu starts from here
                             run++;
                         }
                         save.close();
-                        cout << "\n\n\t\t\t\tMenu Saved Before Exiting Successfully!\n";
-                        int hj = read_history()-1;
+
+                        /// Point and spend will save here
+                        int hj = read_history() - 1;
                         int gh = 0;
                         string name;
-                        int point,amount;
+                        int point, amount;
                         ofstream ve;
-                        ve.open("orderhistory.txt");
+                        ve.open("Order History.txt");
 
                         while (hj--)
                         {
-                            if(MCN == history[gh].get_CustomerName(name))
+                            if (MCN == history[gh].get_CustomerName(name))
                             {
-                             ve << history[gh].get_CustomerName(name) <<endl;
-                             ve << history[gh].get_Total_Amount(amount) + total<<endl;
-                             ve << (total / 10)<<endl;
-                             gh++;
+                                ve << history[gh].get_CustomerName(name) << endl;
+                                ve << history[gh].get_Total_Amount(amount) + total << endl;
+                                ve << (total / 10) << endl;
                             }
                             else
                             {
-                                 ve << history[gh].get_CustomerName(name) <<endl;
-                                 ve << history[gh].get_Total_Amount(amount)<<endl;
-                                 ve << history[gh].get_Total_Point(point)<<endl;
-                                gh++;
-
+                                ve << history[gh].get_CustomerName(name) << endl;
+                                ve << history[gh].get_Total_Amount(amount) << endl;
+                                ve << history[gh].get_Total_Point(point) << endl;
                             }
-
+                            gh++;
                         }
                         ve.close();
+                        cout << "\n\n\t\t\t\tMenu Saved Successfully!\n"; /// Confirmation message of saving
+                        Get_Cpoint();                                     // Calling Previous available point
+                        ShowBill();                                       /// Showing bill after ordering
+                        system("pause");
 
-                        exit(0);
+                        // sleep(2);
+                        system("cls");
+                        int Decide = DSide(); /// Decide next step
+                        system("cls");
+                        if (Decide == 1)
+                            goto Main;
+                        else if (Decide == 2)
+                            goto CMenu;
+                        else if (Decide == 3)
+                            Exit();
                     }
                 }
             }
@@ -1757,7 +1890,7 @@ Main: /// Main Menu starts from here
                 else if (Decide == 2)
                     goto CMenu;
                 else if (Decide == 3)
-                    exit(0);
+                    Exit();
             }
             else
                 cout << "<Please select an option>" << endl;
