@@ -1,10 +1,10 @@
-// Restaurant App
-// 06/01/2022
+/// Restaurant App
+/// 08/01/2022
 
 /// Task
-// 1. Owner can add manager
-// 2. Manager can ban customer
-// 3.
+/// 1. Owner can add manager
+/// 2. Manager can ban customer
+/// 3.
 
 #include <bits/stdc++.h>
 #include <windows.h>
@@ -22,7 +22,7 @@ using namespace std;
 
 int total = 0;     /// Store bill of a session
 int CPoint = 0;    /// Store point earned by customer purchasing items.
-int FCnt = 0;      /// Store customer point when login
+int FCnt = 0;      /// Store counter of purchased item
 int FPrice[50];    /// Store total amount price of a session
 int FAmount[50];   /// Store total amount of purchase of a session
 string MCN;        /// Store username of a session
@@ -131,23 +131,53 @@ public:
         amount = amt;
     }
 
+    int shows(int SItem) /// Show food details only when select an item
+    {
+        if (SItem == serial)
+        {
+            system("cls");
+            cout << "You have selected" << endl;
+            cout << endl;
+            cout << "   ===============================" << endl;
+            cout << "   |  "
+                 << "Food Code : " << serial << endl;
+            cout << "   |  "
+                 << "Name      : " << name << endl;
+            if (price == 0)
+                cout << "   |  "
+                     << "Price      : "
+                     << "Free" << endl;
+            else if (price != 0)
+                cout << "   |  "
+                     << "Price     : " << price << endl;
+            cout << "   |  "
+                 << "Amount    : " << amount << endl;
+            cout << "   ===============================" << endl
+                 << endl;
+
+            return 1;
+        }
+        else
+            return 2;
+    }
+
     void show() /// Show food details
     {
         cout << endl;
         cout << "   ===============================" << endl;
         cout << "   |  "
-             << "#" << serial << setw(15) << endl;
+             << "Food Code : " << serial << endl;
         cout << "   |  "
-             << "Name: " << name << setw(15) << endl;
+             << "Name      : " << name << endl;
         if (price == 0)
             cout << "   |  "
-                 << "Price: "
-                 << "Free" << setw(15) << endl;
+                 << "Price     : "
+                 << "Free" << endl;
         else if (price != 0)
             cout << "   |  "
-                 << "Price: " << price << setw(15) << endl;
+                 << "Price     : " << price << endl;
         cout << "   |  "
-             << "Amount: " << amount << setw(15) << endl;
+             << "Amount    : " << amount << endl;
         cout << "   ===============================" << endl;
     }
 
@@ -158,30 +188,32 @@ public:
         if (qntt > amount || qntt < 1) /// If ordered amount greater or less than quantity, then...
         {
             cout << endl
-                 << "\tSorry, Sir. Wrong amount selection." << endl;
-            cout << "\tPlease select available quantity or try something else." << endl;
+                 << "  Sorry, Sir. Wrong amount selection." << endl;
+            cout << "  Please select available quantity or try something else." << endl;
         reset_or_new:
             cout << endl
                  << "What do you want, sir?" << endl;
             cout << "-----------------------------" << endl;
-            cout << "1.Want something else?" << endl;
-            cout << "2.Reset Quantity." << endl;
+            cout << "1.Something Else. (Enter Key)" << endl;
+            cout << "2.Reset Quantity. (Other Key)" << endl;
 
-            cin >> reset_or_new;
-            if (reset_or_new == 1) /// Order another item
+            reset_or_new = getch();
+            // cin >> reset_or_new;
+            if (reset_or_new == 13) /// Order another item
             {
                 cout << "You have choosen to order something else" << endl;
                 return 1;
             }
-            if (reset_or_new == 2) /// Order same item with new quantity
+            // if (reset_or_new == 2) /// Order same item with new quantity
+            else
             {
             quantity_handle:
                 cout << endl
-                     << "Please enter new quantity......." << endl;
+                     << "Please enter new quantity: ";
                 cin >> qntt;
                 if (qntt > amount || qntt < 1)
                 {
-                    cout << "Out of range." << endl; /// If new amount greater than available or less then 1
+                    cout << "Out of range! Check and Enter again." << endl; /// If new amount greater than available or less then 1
                     goto quantity_handle;
                 }
             }
@@ -189,34 +221,35 @@ public:
 
         ////////////////////////////
         ///  Amount Manage
-        amount -= qntt;                           /// Romoved ordered amount from total amount
-        cout << "Items left: " << amount << endl; /// Showing left amount of ordered product
+        amount -= qntt;                             /// Romoved ordered amount from total amount
+        cout << "  Items left: " << amount << endl; /// Showing left amount of ordered product
         //////////////////////
 
         cout << endl;
         cout << endl
-             << "You have selected: ";
-        cout << "#" << serial << endl;
+             << "You have selected: " << endl;
+        cout << "\t\t   Food Code  : " << serial << endl;
         cout << "\t\t"
-             << "   Name: " << name << endl;
+             << "   Name       : " << name << endl;
         FItems[FCnt] = name; /// Store ordered items name
         cout << "\t\t"
-             << "   Quantity: " << qntt << endl;
+             << "   Quantity   : " << qntt << endl;
         FAmount[FCnt] = qntt; /// Store ordered items amount
         cout << "\t\t"
-             << "   Bill: " << price * qntt << " Taka" << endl;
+             << "   Total Bill : " << price * qntt << " Taka" << endl;
         FPrice[FCnt] = price; /// Store ordered items amount
         FCnt++;               /// After each order counter will increase
         total += price * qntt;
 
         cout << endl
-             << "Wanna pick more?\n";
-        // again = YesNo();
-        cout << "1.Yes!" << endl
-             << "2.No.\n";
-        cin >> again;
+             << "Do you want more, sir?" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "1.Want More. (Enter Key)" << endl;
+        cout << "2.Not Interested. (Other Key)" << endl;
 
-        if (again == 1)
+        again = getch();
+        // cin >> again;
+        if (again == 13)
         {
             return 1;
         }
@@ -360,21 +393,33 @@ void Exit() /// When user select exit it will be more attractive to see
     for (i = 0; i <= ExitMsg.size(); i++)
     {
         cout << ExitMsg[i];
-        Sleep(30);
+        Sleep(20);
     }
+    system("cls");
     exit(0);
 }
 
 void ShowBill()
 {
     int TotalItems;
+    int PointCalculate;
+    int discount;
     string FoodName;
 
     system("cls");
-
-    int discount = total - CPoint;
+    if (CPoint >= total)
+    {
+        PointCalculate = (CPoint - total);  /// Calculate point usage
+        discount = CPoint - PointCalculate; /// Point will count as tk 1 as it converted before
+        CPoint = total;                     /// To use point for discount
+    }
+    else if (CPoint <= total)
+    {
+        PointCalculate = 0;        /// Calculate point usage
+        discount = total - CPoint; /// Point will count as tk 1 as it converted before
+    }
     double vat = discount * 6 / 100.00;
-    string date = "06 Jan 2022";
+    string date = "08 Jan 2022";
     // cout << "Enter Date: Format (05 Jan 2022)" << endl;
     // getline(cin, date);
     // cout << fixed << setprecision(2) << vat << endl;
@@ -386,7 +431,7 @@ void ShowBill()
     cout << "Date: " << date << endl;
     cout << "Invoice To: Mr. " << MCN << endl;
     cout << "----------------------------------------------------" << endl;
-    cout << "Items                  Qty                  Total" << endl;
+    cout << "Items                  Qty                   Total" << endl;
     cout << "----------------------------------------------------" << endl
          << endl;
     for (int i = 0; i < FCnt; i++)
@@ -401,17 +446,22 @@ void ShowBill()
 
     cout << "----------------------------------------------------" << endl;
     cout << "Sub Total                                    " << total << ".00" << endl;
-    cout << "Discount @Point                              " << CPoint << ".00" << endl;
+    cout << "Discount                                     " << CPoint << ".00" << endl;
     cout << "                                             -------" << endl;
     cout << "Net Total                                    " << discount << ".00" << endl;
-    cout << "VAT @6%                                      " << vat << endl;
+    cout << "VAT (6%)                                     " << vat << endl;
     cout << "----------------------------------------------------" << endl;
-    cout << "Grand Total                                  " << discount + vat << endl;
+    cout << "Grand Total                                  " << fixed << setprecision(0) << discount + vat << ".00" << endl;
     cout << "----------------------------------------------------" << endl
+         << endl
+         << endl
+         << "Note: You may get additional round figure bonus on Grand Total!"
          << endl
          << endl
          << endl
          << endl;
+
+    CPoint = PointCalculate;
 
     return;
 }
@@ -423,7 +473,6 @@ int read_history() // Reading Customer detailes from file
     int i = 0;
     string UName;
     int UAmount, UPoint;
-    // Manager custmr[150];
     ifstream file;
     file.open("Order History.txt");
 
@@ -457,6 +506,19 @@ int Get_Cpoint() /// Getting Point from user profile to use later
     return g;
 }
 
+void NoteShow() /// Show note when login/Registration
+{
+    string RegNote = "Note: User Name and Password shouldn't contain any space.";
+    gotoxy(0, 8);
+    color(14);
+    cout << "\t  ";
+    for (int i = 0; i <= RegNote.size(); i++)
+    {
+        cout << RegNote[i];
+        Sleep(1);
+    }
+    return;
+}
 /// Read info Portion
 int read_manager_info() // Reading Manager detailes from file
 {
@@ -541,13 +603,12 @@ int manager_login() /// Login function for Manager
     cout << "             ======================" << endl;
     color(10); /// Changing the color of Print
     cout << endl
-         << "               User name : ";
+         << "               User Name : ";
     color(14); /// Changing the color of Print
     cin >> name_inp;
     MCN = name_inp; // Taking name to use in profile show function
     color(10);      /// Changing the color of Print
-    cout << endl
-         << "               Password  : ";
+    cout << "               Password  : ";
     color(14); /// Changing the color of Print
     cin >> pass_inp;
     cout << endl;
@@ -587,8 +648,10 @@ int manager_login() /// Login function for Manager
         cout << endl
              << "Login Unsuccessfull!" << endl
              << "Check your User name or Password." << endl
+             << endl
              << endl;
-        sleep(2);
+        system("pause");
+        // sleep(2);
         // owner_id_pass();  /// Check list empty or not also to manage listed user later
         return 1;
         // exit(0);
@@ -611,13 +674,12 @@ int customer_login() /// Login function for customer
     cout << "             ======================" << endl;
     color(10); /// Changing the color of Print
     cout << endl
-         << "               User name : ";
+         << "               User Name : ";
     color(14); /// Changing the color of Print
     cin >> name_inp;
     MCN = name_inp; // Taking name to use in profile show function
     color(10);      /// Changing the color of Print
-    cout << endl
-         << "               Password  : ";
+    cout << "               Password  : ";
     color(14); /// Changing the color of Print
     cin >> pass_inp;
     cout << endl;
@@ -657,8 +719,10 @@ int customer_login() /// Login function for customer
         cout << endl
              << "Login Unsuccessfull!" << endl
              << "Check your User name or Password." << endl
+             << endl
              << endl;
-        sleep(2);
+        system("pause");
+        // sleep(2);
         // customer_id_pass();  /// Check list empty or not also to manage listed user later
         return 1;
         // exit(0);
@@ -698,19 +762,24 @@ void manager_reg() /// Manager registration proccess function
     color(12);     /// Changing the color of Print
     cout << "              Registration Panel" << endl;
     cout << "            ======================" << endl;
-    color(10); /// Changing the color of Print
-    cout << endl
-         << "\t  "
-         << "User name: ";
-    color(14); /// Changing the color of Print
-    cin >> inp_name;
-    cout << endl;
+
+    NoteShow();
+    gotoxy(0, 3);
     color(10); /// Changing the color of Print
     cout << "\t  "
-         << "Password: ";
+         << "User Name : ";
+    color(14); /// Changing the color of Print
+    cin >> inp_name;
+    color(10); /// Changing the color of Print
+    cout << "\t  "
+         << "Password  : ";
     color(14); /// Changing the color of Print
     cin >> inp_pass;
-    cout << endl;
+    cout << endl
+         << endl
+         << endl
+         << endl
+         << endl;
 
     total_man = read_manager_info() - 1;
     ofstream on;
@@ -727,9 +796,14 @@ void manager_reg() /// Manager registration proccess function
     on << inp_pass << endl;
     on.close();
 
-    cout << "Registration successfull.......!" << endl;
-    cout << "Going back to main menu........................................." << endl;
-    sleep(1.5);
+    cout << endl
+         << endl
+         << "Registration successfull.......!" << endl
+         << endl;
+    //  cout << "Going back to main menu........................................." << endl << endl;
+    color(7);
+    system("pause");
+    // sleep(1.5);
     return;
 }
 
@@ -743,12 +817,15 @@ AnotherName:
     color(12);     /// Changing the color of Print
     cout << "              Registration Panel" << endl;
     cout << "            ======================" << endl;
+
+    NoteShow();
+    gotoxy(0, 3);
     color(10); /// Changing the color of Print
-    cout << endl
-         << "\t  "
-         << "User name: ";
+    cout << "\t  "
+         << "User Name : ";
     color(14); /// Changing the color of Print
     cin >> inp_name;
+
     int ExistORNot = UserNameCheck(inp_name); /// Return 1 indicates user name available already
     if (ExistORNot == 1)
     {
@@ -757,30 +834,30 @@ AnotherName:
              << endl
              << endl
              << endl
-             << "      User Name already exist!" << endl
-             << "      Please choice another User Name." << endl
+             << endl
+             << endl
+             << endl
+             << "          User Name already exist!" << endl
+             << "          Please choice another User Name." << endl
              << endl;
         color(7);
         system("pause");
         goto AnotherName; /// Another login name because of existance
     }
     else
-        cout << endl;
-    color(10); /// Changing the color of Print
+        color(10); /// Changing the color of Print
     cout << "\t  "
-         << "Password: ";
+         << "Password  : ";
     color(14); /// Changing the color of Print
     cin >> inp_pass;
-    cout << endl;
     color(10); /// Changing the color of Print
     cout << "\t  "
-         << "Mobile: ";
+         << "Mobile    : ";
     color(14); /// Changing the color of Print
     cin >> inp_mob;
-    cout << endl;
     color(10); /// Changing the color of Print
     cout << "\t  "
-         << "Address: ";
+         << "Address   : ";
     color(14); /// Changing the color of Print
     // cin >> inp_adrs;
     cin.ignore();
@@ -825,9 +902,15 @@ AnotherName:
     p << 0 << endl;
     p.close();
 
-    cout << "Registration successfull.......!" << endl;
-    cout << "Going back to main menu........................................." << endl;
-    sleep(1.5);
+    cout << endl
+         << endl
+         << endl
+         << "Registration successfull.......!" << endl
+         << endl;
+    //  cout << "Going back to main menu........................................." << endl << endl;
+    color(7);
+    system("pause");
+    // sleep(1.5);
     return;
 }
 /// End of Registration Portion
@@ -867,36 +950,36 @@ int Menu() /// Menu for owner to give command as admin
 
     for (int i = 0;;)
     {
-        gotoxy(6, 0);
+        gotoxy(11, 0);
         // system("Color 0A");
         color(2);
         cout << "What do you want....?" << endl;
-        gotoxy(6, 1);
+        gotoxy(11, 1);
         // system("Color 0A");
         color(2);
         cout << "---------------------";
 
-        gotoxy(10, 3);
+        gotoxy(12, 2);
         color(Set[0]);
         cout << "1. Existing Menu";
 
-        gotoxy(10, 4);
+        gotoxy(12, 3);
         color(Set[1]);
         cout << "2. New Menu";
 
-        gotoxy(10, 5);
+        gotoxy(12, 4);
         color(Set[2]);
         cout << "3. Update Menu";
 
-        gotoxy(10, 6);
+        gotoxy(12, 5);
         color(Set[3]);
         cout << "4. Add Menu";
 
-        gotoxy(10, 7);
+        gotoxy(12, 6);
         color(Set[4]);
         cout << "5. Delete Menu" << endl;
 
-        gotoxy(10, 8);
+        gotoxy(12, 7);
         color(Set[5]);
         cout << "6. Skip" << endl;
 
@@ -988,20 +1071,20 @@ int DSide() /// DSide function
     for (int i = 0;;)
     {
         color(4);
-        gotoxy(6, 0);
-        cout << "Select an option:";
-        gotoxy(6, 1);
-        cout << "=================";
+        gotoxy(11.8, 0);
+        cout << "Select an option:" << endl;
+        gotoxy(11.8, 1);
+        cout << "-----------------";
 
-        gotoxy(10, 3);
+        gotoxy(12, 2);
         color(Set[0]);
         cout << "1. Main Menu";
 
-        gotoxy(10, 4);
+        gotoxy(12, 3);
         color(Set[1]);
         cout << "2. Back";
 
-        gotoxy(10, 5);
+        gotoxy(12, 4);
         color(Set[2]);
         cout << "3. Exit" << endl;
 
@@ -1060,26 +1143,26 @@ MainMenu:
 
     system("cls");
     color(12); /// Changing the color of Print
-    cout << "   Main Menu:" << endl;
-    cout << "   ===============" << endl;
+               // cout << "   Main Menu:" << endl;
+               // cout << "   ===============" << endl;
     cout << "           Select user type: " << endl;
     cout << "           -------------------" << endl;
 
     for (int i = 0;;)
     {
-        gotoxy(12, 4);
+        gotoxy(12, 2);
         color(Set[0]);
         cout << "1. Manager";
 
-        gotoxy(12, 5);
+        gotoxy(12, 3);
         color(Set[1]);
         cout << "2. Customer" << endl;
 
-        gotoxy(12, 6);
+        gotoxy(12, 4);
         color(Set[2]);
         cout << "3. Developer Info" << endl;
 
-        gotoxy(12, 7);
+        gotoxy(12, 5);
         color(Set[3]);
         cout << "4. Exit" << endl;
 
@@ -1108,11 +1191,11 @@ MainMenu:
             {
                 system("cls");
                 color(12);
-                cout << "   Developers Info" << endl;
-                cout << "  =================" << endl
-                     << endl;
-                color(2);
-                string Team = " Team RunTime Terror";
+                // cout << "   Developers Info" << endl;
+                // cout << "  =================" << endl
+                //     << endl;
+                // color(2);
+                string Team = "     Team RunTime Terror";
                 for (int i = 0; i <= Team.size(); i++)
                 {
                     cout << Team[i];
@@ -1120,14 +1203,14 @@ MainMenu:
                 }
                 // cout << " Team RunTime Terror" << endl;
                 cout << endl
-                     << "----------------------" << endl;
+                     << "     --------------------" << endl;
                 color(14);
                 Sleep(150);
-                cout << "  1. Emrus" << endl;
+                cout << "      1. Emrus" << endl;
                 Sleep(180);
-                cout << "  2. Istiak" << endl;
+                cout << "      2. Istiak" << endl;
                 Sleep(180);
-                cout << "  3. Minhaz" << endl;
+                cout << "      3. Minhaz" << endl;
 
                 cout << endl
                      << endl;
@@ -1174,16 +1257,16 @@ int LogOrReg() /// Login or Registration interactive function
 
     system("cls");
     color(12); /// Changing the color of Print
-    cout << "            Log in or Registration:" << endl;
-    cout << "            ======================" << endl;
+    cout << "           Log in or Registration:" << endl;
+    cout << "           ------------------------" << endl;
 
     for (int i = 0;;)
     {
-        gotoxy(12, 2.5);
+        gotoxy(12, 2);
         color(Set[0]);
         cout << "1. Log in";
 
-        gotoxy(12, 3.5);
+        gotoxy(12, 3);
         color(Set[1]);
         cout << "2. Registration" << endl;
 
@@ -1224,7 +1307,7 @@ int LogOrReg() /// Login or Registration interactive function
     }
 }
 
-int YesNo() /// Confirmation Menu to selecy Yes or No
+int YesNo() /// Confirmation Menu to select Yes or No (Not Used till now)
 {
     int Set[] = {2, 2}; /// DEFAULT COLORS
     int counter = 2;
@@ -1294,17 +1377,17 @@ int CustomerMenu() /// Customer menu function, will be visible after login
         gotoxy(6, 0);
         cout << "   Select an option:";
         gotoxy(6, 1);
-        cout << "   =================";
+        cout << "   -----------------";
 
-        gotoxy(10, 3);
+        gotoxy(12, 2);
         color(Set[0]);
         cout << "1. Profile";
 
-        gotoxy(10, 4);
+        gotoxy(12, 3);
         color(Set[1]);
         cout << "2. Order";
 
-        gotoxy(10, 5);
+        gotoxy(12, 4);
         color(Set[2]);
         cout << "3. Log out" << endl;
 
@@ -1397,10 +1480,11 @@ Main: /// Main Menu starts from here
         if (select_owner == 1)
         {
             system("cls");
-            color(9);
+            color(2);
             cout << endl
-                 << "Available Menu:" << endl; /// Willl shhow available food menu
-            cout << "===============" << endl;
+                 << "          Available Menu:" << endl; /// Willl shhow available food menu
+            cout << "         -----------------" << endl;
+            color(14);
             for (int t = 0; t < counter - 1; t++)
             {
                 arr[t].show();
@@ -1430,10 +1514,6 @@ Main: /// Main Menu starts from here
             }
             else if (decide == 3) /// Exit from program
             {
-                // system(Color 0B);
-                // color(8); /// Changing the color of Print
-                // cout << "Exiting..................................." << endl;
-                // color(7);
                 Exit();
                 // goto Save;
             }
@@ -1442,26 +1522,45 @@ Main: /// Main Menu starts from here
         else if (select_owner == 2) /// If Owner seect to create a new menu deleting entire menu
         {
             system("cls");
+            // Reading From File//
+            //***************************//
+            counter = readallitems(); /// Counter will store total items counted from Food Menu.txt
+                                      //***************************//
             ofstream out;
             out.open("Food Menu.txt");
-            cout << "How Many Item: " << endl;
-            cout << "Enter Amount: ";
+            color(11);
+            cout << "       How Many Items? " << endl;
+            cout << "     ------------------- " << endl;
+            color(2);
+            cout << "       Enter Number: ";
+            color(14);
             cin >> n;
             for (int i = 0; i < n; i++)
             {
-                cout << endl
-                     << "Enter Food Code: ";
+                system("cls");
+                color(4);
+                cout << "            Item #" << i + 1 << endl;
+                cout << "      --------------------- " << endl;
+                color(2);
+                cout << "        Enter Food Code: ";
+                color(14);
                 cin >> sr;
                 out << sr << endl;
                 cin.ignore();
-                cout << "Enter Name: ";
+                color(2);
+                cout << "        Enter Food Name: ";
+                color(14);
                 getline(cin, nm);
                 out << nm << endl;
                 // cin>>nm;
-                cout << "Enter Price: ";
+                color(2);
+                cout << "        Enter Food Price: ";
+                color(14);
                 cin >> pc;
                 out << pc << endl;
-                cout << "Enter Available Quantity: ";
+                color(2);
+                cout << "        Enter Available Quantity: ";
+                color(14);
                 cin >> amt;
                 out << amt << endl;
                 arr[i].put(sr, nm, pc, amt);
@@ -1485,7 +1584,7 @@ Main: /// Main Menu starts from here
             save.close();
             color(14); /// Changing the color of Print
             cout << endl
-                 << "\t\t\tMenu Added Successfully!" << endl;
+                 << "  Menu Added Successfully!" << endl;
             sleep(1.5);
             system("cls");
             goto Decide;
@@ -1495,15 +1594,18 @@ Main: /// Main Menu starts from here
 
         else if (select_owner == 3) /// Manager will update previous menu
         {
+        Update:
             system("cls");
             // Reading From File//
             //***************************//
             counter = readallitems(); /// Counter will store total items counted from Food Menu.txt
-            //***************************//
+                                      //***************************//
 
+            color(2);
             cout << endl
-                 << "Available Menu:" << endl; /// Will show available menu so that manager can decide which one to delete
-            cout << "===============" << endl;
+                 << "          Available Menu:" << endl; /// Willl shhow available food menu
+            cout << "         -----------------" << endl;
+            color(14);
             for (int t = 0; t < counter - 1; t++)
             {
                 arr[t].show();
@@ -1512,17 +1614,44 @@ Main: /// Main Menu starts from here
             cout << endl
                  << "Which item you want to update?" << endl;
             cout << "------------------------------" << endl;
-            int upser; /// Update serial with input (Up means Update)
+            int chkcode; /// Check items with input
             cout << "Enter Food Code: ";
+            cin >> chkcode;
+            int sr = chkcode;
+            int returns;
+            // int chkcodeflag = 0;
+            for (int t = 0; t < counter - 1; t++)
+            {
+                returns = arr[t].shows(chkcode);
+                if (returns == 1)
+                    //  chkcodeflag = 1;
+                    break;
+            }
+
+            if (returns == 2)
+            {
+                color(7);
+                cout << "Item not available!" << endl
+                     << "Please check again" << endl;
+                sleep(2);
+                goto Update;
+            }
+            else
+                cout << endl
+                     << "   Please Enter Data Correctly" << endl;
+            cout << "   ----------------------------" << endl
+                 << endl;
+            int upser; /// Update serial with input (Up means Update)
+            cout << "   Enter New Food Code: ";
             cin >> upser;
-            sr = upser;
-            cout << "Enter Name: ";
+            // sr = upser;
+            cout << "   Enter New Name: ";
             cin.ignore();
             getline(cin, nm);
             // cin>>nam;
-            cout << "Enter Price: ";
+            cout << "   Enter New Price: ";
             cin >> pc;
-            cout << "Enter Amount: ";
+            cout << "   Enter New Amount: ";
             cin >> amt;
             // arr[upser - 1].put(sr, nm, pc, amt);
 
@@ -1530,9 +1659,9 @@ Main: /// Main Menu starts from here
             int p = counter - 1;
             while (p--)
             {
-                if (arr[run].get_ser(sr) == (upser))
+                if (arr[run].get_ser(sr) == (chkcode))
                 {
-                    arr[run].put(sr, nm, pc, amt);
+                    arr[run].put(upser, nm, pc, amt);
                 }
                 run++;
                 if (p == 0)
@@ -1550,7 +1679,7 @@ Main: /// Main Menu starts from here
 
             while (cnt--)
             {
-                save << arr[run].get_ser(sr) << endl;
+                save << arr[run].get_ser(upser) << endl;
                 save << arr[run].get_name(nm) << endl;
                 save << arr[run].get_price(pc) << endl;
                 save << arr[run].get_amount(amt) << endl;
@@ -1559,7 +1688,7 @@ Main: /// Main Menu starts from here
             save.close();
             color(14);
             cout << endl
-                 << "\t\t\tUpdated Successfully." << endl;
+                 << "  Updated Successfully!" << endl;
             sleep(2);
             system("cls");
             goto Decide;
@@ -1572,24 +1701,26 @@ Main: /// Main Menu starts from here
             //***************************//
             counter = readallitems(); /// Counter will store total items counted from Food Menu.txt
             //***************************//
-            //   system("cls");
-            cout << "How many items you want to add?" << endl;
+            color(2);
+            cout << "  How many items you want to add?" << endl
+                 << "  -------------------------------" << endl;
+            color(14);
             int new_add, l;
-            cout << "Enter the number: ";
+            cout << "  Enter the number: ";
             cin >> new_add;
 
             for (l = counter - 1; l < new_add + counter - 1; l++)
             {
                 cout << endl
-                     << "Enter Food Code: ";
+                     << "  Enter Food Code: ";
                 cin >> sr;
-                cout << "Enter Name: ";
+                cout << "  Enter Name: ";
                 cin.ignore();
                 getline(cin, nm);
                 // cin>>nam;
-                cout << "Enter Price: ";
+                cout << "  Enter Price: ";
                 cin >> pc;
-                cout << "Enter Amount: ";
+                cout << "  Enter Amount: ";
                 cin >> amt;
                 arr[l].put(sr, nm, pc, amt);
             }
@@ -1609,7 +1740,7 @@ Main: /// Main Menu starts from here
             }
             save.close();
             cout << endl
-                 << "\t\t\tAdded Successfully." << endl;
+                 << "  Added Successfully." << endl;
             sleep(2);
             system("cls");
             goto Decide;
@@ -1622,8 +1753,9 @@ Main: /// Main Menu starts from here
             counter = readallitems() - 1;
 
             cout << endl
-                 << "Available Menu:" << endl; /// Will show available menu so that manager can decide which one to delete
-            cout << "===============" << endl;
+                 << "          Available Menu:" << endl; /// Will show available menu so that manager can decide which one to delete
+            cout << "         -----------------" << endl;
+            color(14);
             for (int t = 0; t < counter; t++)
             {
                 arr[t].show();
@@ -1631,9 +1763,11 @@ Main: /// Main Menu starts from here
             ////////////////////////////////////////////////
 
             cout << endl
-                 << "Which items you want to delete?" << endl;
+                 << "  Which items you want to delete?" << endl
+                 << "  -------------------------------" << endl
+                 << endl;
             int new_delete, l;
-            cout << "Enter the number: ";
+            cout << "  Enter the number: ";
             cin >> new_delete;
 
             ofstream save;
@@ -1663,12 +1797,12 @@ Main: /// Main Menu starts from here
             save.close();
             if (check == 0)
             {
-                cout << "\t\t\t\tInvalid Food Code" << endl;
+                cout << "  Invalid Food Code!" << endl;
             }
             else if (check > 0)
             {
                 color(13);
-                cout << "\t\t\t\tSuccessfully deleted" << endl;
+                cout << "  Successfully deleted!" << endl;
             }
             sleep(2);
             system("cls");
@@ -1677,8 +1811,6 @@ Main: /// Main Menu starts from here
 
         if (select_owner == 6) /// Select skip to go back
         {
-            //   cout << endl << "\t\t\tItem added Successfully." << endl;
-            //   sleep(1.5);
             system("cls");
             goto Decide;
         }
@@ -1756,36 +1888,34 @@ Main: /// Main Menu starts from here
                 //   system("Color 0A");
                 color(9);
                 cout << endl
-                     << "Available Menu:" << endl; /// Showing available menu
-                cout << "===============" << endl;
+                     << "          Available Menu:" << endl; /// Showing available menu
+                cout << "         -----------------" << endl;
                 color(14);
                 for (int t = 0; t < counter - 1; t++)
                 {
                     arr[t].show();
                 }
                 /////////////////////////////////////
-            Confirmation:
-                color(6);
                 // confirmation = YesNo();
+                color(2);
                 cout << endl
-                     << "Want something....?\n";
-                cout << "1.Yes" << endl;
-                cout << "2.No" << endl;
-
-                cin >> confirmation;
-                if (confirmation == 1)
+                     << "  What do you want, sir?" << endl;
+                cout << "  --------------------------" << endl;
+                color(14);
+                cout << "  1. Press Enter to Order" << endl;
+                cout << "  2. Press Other to Cancel" << endl;
+                confirmation = getch();
+                // cin >> confirmation;
+                // confirmation = 1;
+                if (confirmation == 13)
                 {
                 More:
+                    color(14);
                     cout << endl
-                         << "Please select a menu: ";
-                select_menu: // Level for jumping if wrong selection
-                    cin >> menu;
-                    /*   if (menu <= counter)
-                       {
-                           cout << "Quantity: ";
-                           cin >> quantity;
-                           check = arr[menu - 1].show_item(quantity);  */
-
+                         << "  Please select a menu: ";
+                select_menu:     // Level for jumping if wrong selection
+                    cin >> menu; /// Food code actually
+                    /// Searching menu with food code
                     int run = 0;
                     int check_code = 0;
                     int p = counter - 1;
@@ -1793,7 +1923,7 @@ Main: /// Main Menu starts from here
                     {
                         if (arr[run].get_ser(sr) == (menu))
                         {
-                            cout << "Quantity: ";
+                            cout << "  Quantity: ";
                             cin >> quantity;
                             check = arr[run].show_item(quantity);
                             check_code = 1;
@@ -1816,6 +1946,10 @@ Main: /// Main Menu starts from here
                     }
                     else
                     {
+                        CPoint = Get_Cpoint(); // Calling Previous available point
+                        ShowBill();            /// Showing bill after ordering
+                        system("pause");
+
                     Save:
                         ofstream save;
                         save.open("Food Menu.txt");
@@ -1846,7 +1980,7 @@ Main: /// Main Menu starts from here
                             {
                                 ve << history[gh].get_CustomerName(name) << endl;
                                 ve << history[gh].get_Total_Amount(amount) + total << endl;
-                                ve << (total / 10) << endl;
+                                ve << (CPoint + (total / 10)) << endl;
                             }
                             else
                             {
@@ -1857,44 +1991,46 @@ Main: /// Main Menu starts from here
                             gh++;
                         }
                         ve.close();
+
+                        total = 0;                                        /// resetting value
+                        FCnt = 0;                                         /// resetting value
                         cout << "\n\n\t\t\t\tMenu Saved Successfully!\n"; /// Confirmation message of saving
-                        Get_Cpoint();                                     // Calling Previous available point
-                        ShowBill();                                       /// Showing bill after ordering
-                        system("pause");
 
                         // sleep(2);
                         system("cls");
                         int Decide = DSide(); /// Decide next step
-                        system("cls");
                         if (Decide == 1)
+                        {
+                            system("cls");
                             goto Main;
+                        }
                         else if (Decide == 2)
+                        {
+                            system("cls");
                             goto CMenu;
+                        }
                         else if (Decide == 3)
                             Exit();
                     }
                 }
+                else
+                {
+                    system("cls");
+                    int Decide = DSide(); /// Decide next step
+                    if (Decide == 1)
+                    {
+                        system("cls");
+                        goto Main;
+                    }
+                    else if (Decide == 2)
+                    {
+                        system("cls");
+                        goto CMenu;
+                    }
+                    else if (Decide == 3)
+                        Exit();
+                }
             }
-            if (confirmation == 2)
-            {
-                cout << endl
-                     << endl
-                     << "\n\n\nThank you for your interest.\n";
-                cout << "\t\tHope, you will find something needy next time......\n";
-                sleep(2);
-                system("cls");
-                int Decide = DSide();
-                system("cls");
-                if (Decide == 1)
-                    goto Main;
-                else if (Decide == 2)
-                    goto CMenu;
-                else if (Decide == 3)
-                    Exit();
-            }
-            else
-                cout << "<Please select an option>" << endl;
-            goto Confirmation;
         }
     }
 
