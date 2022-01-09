@@ -1529,10 +1529,8 @@ Main: /// Main Menu starts from here
         else if (select_owner == 2) /// If Owner seect to create a new menu deleting entire menu
         {
             system("cls");
-            // Reading From File//
+
             //***************************//
-            counter = readallitems(); /// Counter will store total items counted from Food Menu.txt
-                                      //***************************//
             ofstream out;
             out.open("Food Menu.txt");
             color(11);
@@ -1542,7 +1540,8 @@ Main: /// Main Menu starts from here
             cout << "       Enter Number: ";
             color(14);
             cin >> n;
-            for (int i = 0; i < n; i++)
+            int i;
+            for (i = 0; i < n; i++)
             {
                 system("cls");
                 color(4);
@@ -1574,21 +1573,6 @@ Main: /// Main Menu starts from here
             }
             out.close();
 
-            // ofstream file("Food Menu.txt"); /// Clearing file content  o get a fresh file
-            ofstream save;
-            save.open("Food Menu.txt");
-            int cnt = counter - 1;
-            int run = 0;
-
-            while (cnt--)
-            {
-                save << arr[run].get_ser(sr) << endl;
-                save << arr[run].get_name(nm) << endl;
-                save << arr[run].get_price(pc) << endl;
-                save << arr[run].get_amount(amt) << endl;
-                run++;
-            }
-            save.close();
             color(14); /// Changing the color of Print
             cout << endl
                  << "  Menu Added Successfully!" << endl;
