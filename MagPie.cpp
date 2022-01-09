@@ -2,9 +2,9 @@
 /// 09/01/2022
 
 /// Task
-/// 1. Owner can add manager
+/// 1. Only Owner can add manager
 /// 2. Manager can ban customer
-/// 3.
+/// 3. 
 
 #include <bits/stdc++.h>
 #include <windows.h>
@@ -1558,16 +1558,32 @@ Main: /// Main Menu starts from here
                 color(14);
                 getline(cin, nm);
                 out << nm << endl;
-                // cin>>nm;
+            // cin>>nm;
+            NewPrice:
                 color(2);
                 cout << "        Enter Food Price: ";
                 color(14);
                 cin >> pc;
-                out << pc << endl;
+                if (pc < 0)
+                {
+                    color(11);
+                    cout << "        Price Cann't be negative. Enter again" << endl;
+                    goto NewPrice;
+                }
+                else
+                    out << pc << endl;
+            NewAmount:
                 color(2);
                 cout << "        Enter Available Quantity: ";
                 color(14);
                 cin >> amt;
+                if (amt < 0)
+                {
+                    color(11);
+                    cout << "        Quantity Cann't be negative. Enter again" << endl;
+                    goto NewAmount;
+                }
+
                 out << amt << endl;
                 arr[i].put(sr, nm, pc, amt);
             }
@@ -1575,7 +1591,7 @@ Main: /// Main Menu starts from here
 
             color(14); /// Changing the color of Print
             cout << endl
-                 << "  Menu Added Successfully!" << endl;
+                 << "        Menu Added Successfully!" << endl;
             sleep(1.5);
             system("cls");
             goto Decide;
@@ -1602,14 +1618,17 @@ Main: /// Main Menu starts from here
                 arr[t].show();
             }
             ////////////////////////////////////////////////
+            color(2);
             cout << endl
                  << "Which item you want to update?" << endl;
             cout << "------------------------------" << endl;
+            color(14);
             int chkcode; /// Check items with input
             cout << "Enter Food Code: ";
             cin >> chkcode;
             int sr = chkcode;
             int returns;
+
             // int chkcodeflag = 0;
             for (int t = 0; t < counter - 1; t++)
             {
@@ -1628,10 +1647,12 @@ Main: /// Main Menu starts from here
                 goto Update;
             }
             else
-                cout << endl
-                     << "   Please Enter Data Correctly" << endl;
+                color(2);
+            cout << endl
+                 << "   Please Enter Data Correctly" << endl;
             cout << "   ----------------------------" << endl
                  << endl;
+            color(14);
             int upser; /// Update serial with input (Up means Update)
             cout << "   Enter New Food Code: ";
             cin >> upser;
@@ -1639,12 +1660,27 @@ Main: /// Main Menu starts from here
             cout << "   Enter New Name: ";
             cin.ignore();
             getline(cin, nm);
-            // cin>>nam;
+        // cin>>nam;
+        UpPrice:
             cout << "   Enter New Price: ";
             cin >> pc;
-            cout << "   Enter New Amount: ";
+            if (pc < 0)
+            {
+                color(11);
+                cout << "   Price Cann't be negative. Enter again" << endl;
+                color(14);
+                goto UpPrice;
+            }
+            else
+            UpAmount:
+                cout << "   Enter New Amount: ";
             cin >> amt;
-            // arr[upser - 1].put(sr, nm, pc, amt);
+            if (amt < 0)
+            {
+                color(11);
+                cout << "  Amount Cann't be negative. Enter again" << endl;
+                goto UpAmount;
+            }
 
             int run = 0; /// Run array/Loop incrementing variable
             int p = counter - 1;
@@ -1697,23 +1733,52 @@ Main: /// Main Menu starts from here
                  << "  -------------------------------" << endl;
             color(14);
             int new_add, l;
+            int itemsr = 1;
             cout << "  Enter the number: ";
+            color(4);
             cin >> new_add;
 
             for (l = counter - 1; l < new_add + counter - 1; l++)
             {
-                cout << endl
-                     << "  Enter Food Code: ";
+                system("cls");
+                color(4);
+                cout << "            Item #" << itemsr << endl;
+                cout << "      --------------------- " << endl;
+                color(2);
+                cout << "      Enter Food Code: ";
+                color(14);
                 cin >> sr;
-                cout << "  Enter Name: ";
+                color(2);
+                cout << "      Enter Name: ";
+                color(14);
                 cin.ignore();
                 getline(cin, nm);
-                // cin>>nam;
-                cout << "  Enter Price: ";
+            // cin>>nam;
+            AddPrice:
+                color(2);
+                cout << "      Enter Price: ";
+                color(14);
                 cin >> pc;
-                cout << "  Enter Amount: ";
+                if (pc < 0)
+                {
+                    color(11);
+                    cout << "      Price Cann't be negative. Enter again" << endl;
+                    goto AddPrice;
+                }
+                else
+                AddAmount:
+                    color(2);
+                cout << "      Enter Amount: ";
+                color(14);
                 cin >> amt;
+                if (amt < 0)
+                {
+                    color(11);
+                    cout << "      Amount Cann't be negative. Enter again" << endl;
+                    goto AddAmount;
+                }
                 arr[l].put(sr, nm, pc, amt);
+                itemsr++; /// Increasing serial to show header
             }
 
             ofstream save;
@@ -1731,7 +1796,7 @@ Main: /// Main Menu starts from here
             }
             save.close();
             cout << endl
-                 << "  Added Successfully." << endl;
+                 << "      Added Successfully." << endl;
             sleep(2);
             system("cls");
             goto Decide;
