@@ -1,5 +1,5 @@
 /// Restaurant App
-/// 08/01/2022
+/// 09/01/2022
 
 /// Task
 /// 1. Owner can add manager
@@ -409,9 +409,10 @@ void ShowBill()
     system("cls");
     if (CPoint >= total)
     {
-        PointCalculate = (CPoint - total);  /// Calculate point usage
-        discount = CPoint - PointCalculate; /// Point will count as tk 1 as it converted before
-        CPoint = total;                     /// To use point for discount
+        PointCalculate = (CPoint - total); /// Calculate point usage
+        // discount = CPoint - PointCalculate; /// Point will count as tk 1 as it converted before
+        discount = 0;   /// Point will count as tk 1 as it converted before
+        CPoint = total; /// To use point for discount
     }
     else if (CPoint <= total)
     {
@@ -419,7 +420,7 @@ void ShowBill()
         discount = total - CPoint; /// Point will count as tk 1 as it converted before
     }
     double vat = discount * 6 / 100.00;
-    string date = "08 Jan 2022";
+    string date = "09 Jan 2022";
     // cout << "Enter Date: Format (05 Jan 2022)" << endl;
     // getline(cin, date);
     // cout << fixed << setprecision(2) << vat << endl;
@@ -449,7 +450,13 @@ void ShowBill()
     cout << "Discount                                     " << CPoint << ".00" << endl;
     cout << "                                             -------" << endl;
     cout << "Net Total                                    " << discount << ".00" << endl;
-    cout << "VAT (6%)                                     " << vat << endl;
+    if (vat == 0)
+    {
+        cout << "VAT (6%)                                     "
+             << "0.00" << endl;
+    }
+    else
+        cout << "VAT (6%)                                     " << fixed << setprecision(2) << vat << endl;
     cout << "----------------------------------------------------" << endl;
     cout << "Grand Total                                  " << fixed << setprecision(0) << discount + vat << ".00" << endl;
     cout << "----------------------------------------------------" << endl
